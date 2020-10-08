@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Picturium</string>
+    <string name="searchbar_hint">Search</string>
+    <string name="upload_btn_description">Upload images</string>
 </resources>
