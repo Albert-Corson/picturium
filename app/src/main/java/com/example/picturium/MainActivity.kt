@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         searchBar = findViewById(R.id.searchbar)
         uploadBtn = findViewById(R.id.upload_btn)
         profileBtn = findViewById(R.id.profile_btn)
-        toast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
+        toast = Toast.makeText(profileBtn.context, "", Toast.LENGTH_SHORT)
 
         searchBar.setOnQueryTextListener(SearchBarQueryListener(searchBar, toast))
         profileBtn.setOnClickListener { profileBtnClickListener() }

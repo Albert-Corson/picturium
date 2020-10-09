@@ -14,17 +14,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:theme="@style/AppTheme.TopBar"
+        android:background="@color/primary"
         tools:ignore="MissingConstraints">
 
         <ImageButton
             android:id="@+id/profile_btn"
             android:layout_width="@android:dimen/app_icon_size"
             android:layout_height="@android:dimen/app_icon_size"
+            android:theme="@style/AppTheme.TopBar.ImageButton"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_dflt_profile"
-            android:scaleType="fitCenter"
-            android:padding="8dp"
-            android:adjustViewBounds="true" />
+            android:contentDescription="@string/profile_btn_description"
+            android:tooltipText="@string/profile_btn_description" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchbar"
@@ -33,7 +34,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:iconifiedByDefault="false"
-            app:queryBackground="@android:color/transparent"
+            app:queryBackground="@null"
             app:queryHint="@string/searchbar_hint"
             app:searchIcon="@null"
             app:closeIcon="@null" />
@@ -42,12 +43,11 @@
             android:id="@+id/upload_btn"
             android:layout_width="@android:dimen/app_icon_size"
             android:layout_height="@android:dimen/app_icon_size"
+            android:theme="@style/AppTheme.TopBar.ImageButton"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_upload"
-            android:scaleType="fitCenter"
-            android:padding="8dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/upload_btn_description" />
+            android:contentDescription="@string/upload_btn_description"
+            android:tooltipText="@string/upload_btn_description" />
 
     </LinearLayout>
 
