@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Button
+        android:id="@+id/filter_button_top_day"
+        style="@style/AppTheme.TopBar.FilterButtonSecondary"
+        android:text="@string/filter_button_top_day" />
+
+    <Button
+        android:id="@+id/filter_button_top_week"
+        style="@style/AppTheme.TopBar.FilterButtonSecondary"
+        android:text="@string/filter_button_top_week" />
+
+    <Button
+        android:id="@+id/filter_button_top_month"
+        style="@style/AppTheme.TopBar.FilterButtonSecondary"
+        android:text="@string/filter_button_top_month" />
+
+    <Button
+        android:id="@+id/filter_button_top_year"
+        style="@style/AppTheme.TopBar.FilterButtonSecondary"
+        android:text="@string/filter_button_top_year" />
+
+    <Button
+        android:id="@+id/filter_button_top_all"
+        style="@style/AppTheme.TopBar.FilterButtonSecondary"
+        android:text="@string/filter_button_top_all" />
+</merge>

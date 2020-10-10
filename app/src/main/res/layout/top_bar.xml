@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/primary"
+    android:orientation="horizontal"
+    android:theme="@style/AppTheme.TopBar">
+
+    <ImageButton
+        android:id="@+id/profile_btn"
+        tools:targetApi="o"
+        android:layout_width="@android:dimen/app_icon_size"
+        android:layout_height="@android:dimen/app_icon_size"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/profile_btn_description"
+        android:src="@drawable/ic_dflt_profile"
+        android:theme="@style/AppTheme.TopBar.ImageButton"
+        android:tooltipText="@string/profile_btn_description" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchbar"
+        app:closeIcon="@null"
+        app:iconifiedByDefault="false"
+        app:queryBackground="@null"
+        app:queryHint="@string/searchbar_hint"
+        app:searchIcon="@null"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:theme="@style/AppTheme.TopBar.SearchBar" />
+
+    <ImageButton
+        android:id="@+id/upload_btn"
+        tools:targetApi="o"
+        android:layout_width="@android:dimen/app_icon_size"
+        android:layout_height="@android:dimen/app_icon_size"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/upload_btn_description"
+        android:src="@drawable/ic_upload_button"
+        android:theme="@style/AppTheme.TopBar.ImageButton"
+        android:tooltipText="@string/upload_btn_description" />
+</LinearLayout>

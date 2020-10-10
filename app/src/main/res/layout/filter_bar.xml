@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:theme="@style/AppTheme.FilterBar">
+
+    <LinearLayout
+        android:id="@+id/filter_buttons_mains"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="5dp">
+
+        <Button
+            android:tag="viral"
+            android:id="@+id/filter_button_viral"
+            style="@style/AppTheme.TopBar.FilterButtonMain"
+            android:text="@string/filter_button_viral" />
+
+        <Button
+            android:tag="top"
+            android:id="@+id/filter_button_top"
+            style="@style/AppTheme.TopBar.FilterButtonMain"
+            android:text="@string/filter_button_top" />
+
+        <Button
+            android:tag="user"
+            android:id="@+id/filter_button_viral_user"
+            style="@style/AppTheme.TopBar.FilterButtonMain"
+            android:text="@string/filter_button_user" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/filter_buttons_secondaries"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:tag="viral"
+            android:id="@+id/filter_buttons_viral"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include layout="@layout/filter_buttons_viral" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:tag="top"
+            android:id="@+id/filter_buttons_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include layout="@layout/filter_buttons_top" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:tag="user"
+            android:id="@+id/filter_buttons_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include layout="@layout/filter_buttons_user" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

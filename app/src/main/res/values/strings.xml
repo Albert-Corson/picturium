@@ -3,4 +3,18 @@
     <string name="searchbar_hint">Search</string>
     <string name="upload_btn_description">Upload images</string>
     <string name="profile_btn_description">Access your profile</string>
+    <string name="filter_button_viral">Viral</string>
+    <string name="filter_button_user">User</string>
+    <string name="filter_button_top">Top</string>
+    <string name="filter_button_viral_popular">Popular</string>
+    <string name="filter_button_viral_newest">Newest</string>
+    <string name="filter_button_viral_best">Best</string>
+    <string name="filter_button_top_day">Day</string>
+    <string name="filter_button_top_week">Week</string>
+    <string name="filter_button_top_month">Month</string>
+    <string name="filter_button_top_year">Year</string>
+    <string name="filter_button_top_all">All</string>
+    <string name="filter_button_user_rising">Rising</string>
+    <string name="filter_button_user_newest">Newest</string>
+    <string name="filter_button_user_popular">Popular</string>
 </resources>

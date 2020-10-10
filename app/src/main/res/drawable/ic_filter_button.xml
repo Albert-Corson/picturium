@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:width="73dp"
+    android:height="31dp"
+    android:viewportWidth="73"
+    android:viewportHeight="31">
+
+    <group>
+        <clip-path
+            android:pathData="M10 0H63C68.5228 0 73 4.47715 73 10V21C73 26.5228 68.5228 31 63 31H10C4.47715 31 0 26.5228 0 21V10C0 4.47715 4.47715 0 10 0Z"
+            tools:ignore="VectorRaster" />
+        <path
+            android:fillColor="@color/primaryLight" android:pathData="M0 0V31H73V0" tools:ignore="VectorRaster" />
+    </group>
+
+</vector>

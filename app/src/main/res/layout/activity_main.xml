@@ -9,46 +9,22 @@
     android:theme="@style/AppTheme"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <include
+        android:id="@+id/top_bar"
+        layout="@layout/top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:theme="@style/AppTheme.TopBar"
-        android:background="@color/primary"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/profile_btn"
-            android:layout_width="@android:dimen/app_icon_size"
-            android:layout_height="@android:dimen/app_icon_size"
-            android:theme="@style/AppTheme.TopBar.ImageButton"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_dflt_profile"
-            android:contentDescription="@string/profile_btn_description"
-            android:tooltipText="@string/profile_btn_description" />
-
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchbar"
-            android:theme="@style/AppTheme.TopBar.SearchBar"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:iconifiedByDefault="false"
-            app:queryBackground="@null"
-            app:queryHint="@string/searchbar_hint"
-            app:searchIcon="@null"
-            app:closeIcon="@null" />
-
-        <ImageButton
-            android:id="@+id/upload_btn"
-            android:layout_width="@android:dimen/app_icon_size"
-            android:layout_height="@android:dimen/app_icon_size"
-            android:theme="@style/AppTheme.TopBar.ImageButton"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_upload"
-            android:contentDescription="@string/upload_btn_description"
-            android:tooltipText="@string/upload_btn_description" />
-
-    </LinearLayout>
+    <include
+        android:id="@+id/filter_bar"
+        layout="@layout/filter_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
