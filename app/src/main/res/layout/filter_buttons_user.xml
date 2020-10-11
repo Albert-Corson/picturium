@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Button
+    <RadioButton
         android:id="@+id/filter_button_user_popular"
-        style="@style/AppTheme.TopBar.FilterButtonSecondary"
+        style="@style/AppTheme.TopBar.SecondaryFilterButton"
+        android:checked="true"
         android:text="@string/filter_button_user_popular" />
 
-    <Button
+    <RadioButton
         android:id="@+id/filter_button_user_newest"
-        style="@style/AppTheme.TopBar.FilterButtonSecondary"
+        style="@style/AppTheme.TopBar.SecondaryFilterButton"
         android:text="@string/filter_button_user_newest" />
 
-    <Button
+    <RadioButton
         android:id="@+id/filter_button_user_rising"
-        style="@style/AppTheme.TopBar.FilterButtonSecondary"
+        style="@style/AppTheme.TopBar.SecondaryFilterButton"
         android:text="@string/filter_button_user_rising" />
 </merge>

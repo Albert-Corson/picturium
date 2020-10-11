@@ -10,6 +10,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var searchBar: SearchView
     private lateinit var uploadBtn: ImageButton
     private lateinit var profileBtn: ImageButton
+    private lateinit var filersManager: FilterButtonsManager
+
     private lateinit var toast: Toast
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         searchBar = findViewById(R.id.searchbar)
         uploadBtn = findViewById(R.id.upload_btn)
         profileBtn = findViewById(R.id.profile_btn)
+        filersManager = FilterButtonsManager(this)
         toast = Toast.makeText(profileBtn.context, "", Toast.LENGTH_SHORT)
 
         searchBar.setOnQueryTextListener(SearchBarQueryListener(searchBar, toast))

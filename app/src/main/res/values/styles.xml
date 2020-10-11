@@ -30,7 +30,7 @@
         <item name="android:background">@color/primaryDark</item>
     </style>
 
-    <style name="AppTheme.TopBar.FilterButtonMain" parent="AppTheme.FilterBar">
+    <style name="AppTheme.TopBar.MainFilterButton" parent="AppTheme.FilterBar">
         <item name="android:layout_width">70dp</item>
         <item name="android:layout_height">30dp</item>
         <item name="android:layout_margin">5dp</item>
@@ -38,29 +38,21 @@
         <item name="android:adjustViewBounds">true</item>
         <item name="android:textSize">13sp</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/primaryAccent</item>
+        <item name="android:textColor">@color/main_filter_button_text</item>
+        <item name="android:textAlignment">center</item>
         <item name="android:background">@drawable/ic_filter_button</item>
-        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/primaryLight</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/main_filter_button_background</item>
+        <item name="android:button">@null</item>
     </style>
 
-    <style name="AppTheme.TopBar.FilterButtonMainSelected" parent="AppTheme.FilterBar">
-        <item name="android:textColor">@color/primaryDark</item>
-        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/primaryAccent</item>
-    </style>
-
-    <style name="AppTheme.TopBar.FilterButtonSecondary" parent="AppTheme.TopBar.FilterButtonMain">
+    <style name="AppTheme.TopBar.SecondaryFilterButton" parent="AppTheme.TopBar.MainFilterButton">
         <item name="android:layout_width">62dp</item>
         <item name="android:layout_height">30dp</item>
         <item name="android:layout_margin">5dp</item>
         <item name="android:textSize">11sp</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/primaryAccent</item>
-        <item name="backgroundTint">@color/primary</item>
-    </style>
-
-    <style name="AppTheme.TopBar.FilterButtonSecondarySelected" parent="AppTheme.TopBar.FilterButtonSecondary">
-        <item name="android:textColor">@color/primaryDark</item>
-        <item name="backgroundTint">@color/primaryAccentLight</item>
+        <item name="android:textColor">@color/secondary_filter_text</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/secondary_filter_button_background</item>
     </style>
 
 </resources>

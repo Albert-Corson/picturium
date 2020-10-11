@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Button
+    <RadioButton
         android:id="@+id/filter_button_top_day"
-        style="@style/AppTheme.TopBar.FilterButtonSecondary"
+        style="@style/AppTheme.TopBar.SecondaryFilterButton"
+        android:checked="true"
         android:text="@string/filter_button_top_day" />
 
-    <Button
+    <RadioButton
         android:id="@+id/filter_button_top_week"
-        style="@style/AppTheme.TopBar.FilterButtonSecondary"
+        style="@style/AppTheme.TopBar.SecondaryFilterButton"
         android:text="@string/filter_button_top_week" />
 
-    <Button
+    <RadioButton
         android:id="@+id/filter_button_top_month"
-        style="@style/AppTheme.TopBar.FilterButtonSecondary"
+        style="@style/AppTheme.TopBar.SecondaryFilterButton"
         android:text="@string/filter_button_top_month" />
 
-    <Button
+    <RadioButton
         android:id="@+id/filter_button_top_year"
-        style="@style/AppTheme.TopBar.FilterButtonSecondary"
+        style="@style/AppTheme.TopBar.SecondaryFilterButton"
         android:text="@string/filter_button_top_year" />
 
-    <Button
+    <RadioButton
         android:id="@+id/filter_button_top_all"
-        style="@style/AppTheme.TopBar.FilterButtonSecondary"
+        style="@style/AppTheme.TopBar.SecondaryFilterButton"
         android:text="@string/filter_button_top_all" />
+
 </merge>
