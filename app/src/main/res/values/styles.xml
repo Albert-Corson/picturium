@@ -14,26 +14,26 @@
         <item name="android:textColorHint">@color/translucent</item>
     </style>
 
-    <style name="AppTheme.TopBar" parent="AppTheme" />
+    <style name="AppTheme.TopBar" />
 
-    <style name="AppTheme.TopBar.SearchBar" parent="AppTheme.TopBar">
+    <style name="AppTheme.TopBar.SearchBar">
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="AppTheme.TopBar.ImageButton" parent="AppTheme.TopBar">
+    <style name="AppTheme.TopBar.ImageButton">
         <item name="android:scaleType">fitCenter</item>
         <item name="android:padding">8sp</item>
         <item name="android:adjustViewBounds">true</item>
     </style>
 
-    <style name="AppTheme.FilterBar" parent="AppTheme">
+    <style name="AppTheme.FilterBar">
         <item name="android:background">@color/primaryDark</item>
     </style>
 
-    <style name="AppTheme.TopBar.MainFilterButton" parent="AppTheme.FilterBar">
-        <item name="android:layout_width">70dp</item>
+    <style name="AppTheme.FilterBar.MainFilterButton">
+        <item name="android:layout_width">65dp</item>
         <item name="android:layout_height">30dp</item>
-        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_margin">4dp</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:textSize">13sp</item>
@@ -43,16 +43,18 @@
         <item name="android:background">@drawable/ic_filter_button</item>
         <item name="android:backgroundTint" tools:targetApi="lollipop">@color/main_filter_button_background</item>
         <item name="android:button">@null</item>
+        <item name="android:onClick">mainFilterBtnOnClick</item>
     </style>
 
-    <style name="AppTheme.TopBar.SecondaryFilterButton" parent="AppTheme.TopBar.MainFilterButton">
+    <style name="AppTheme.FilterBar.SecondaryFilterButton" parent="AppTheme.FilterBar.MainFilterButton">
         <item name="android:layout_width">62dp</item>
-        <item name="android:layout_height">30dp</item>
-        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_height">26dp</item>
+        <item name="android:layout_margin">2.5dp</item>
         <item name="android:textSize">11sp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/secondary_filter_text</item>
         <item name="android:backgroundTint" tools:targetApi="lollipop">@color/secondary_filter_button_background</item>
+        <item name="android:onClick">secondaryFilterBtnOnClick</item>
     </style>
 
 </resources>

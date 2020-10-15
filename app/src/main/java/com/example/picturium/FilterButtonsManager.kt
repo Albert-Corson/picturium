@@ -12,43 +12,30 @@ class FilterButtonsManager(activity: AppCompatActivity) {
     private val filters: HashMap<RadioButton, RadioGroup> = HashMap()
 
     init {
-        val mainFilters: RadioGroup = activity.findViewById(R.id.main_filter_buttons)
-        val secondaryFilters: ConstraintLayout = activity.findViewById(R.id.secondary_filter_buttons)
+        val mainFilters: RadioGroup = activity.findViewById(R.id.filterBar_rgMainFilterButtons)
+        val secondaryFilters: ConstraintLayout = activity.findViewById(R.id.filterBar_clSecondaryFilterButtons)
         for (view in mainFilters) {
             if (view !is RadioButton)
                 continue
-            val subFilters: RadioGroup = secondaryFilters.findViewWithTag(view.tag)
-            filters[view] = subFilters
+            filters[view] = secondaryFilters.findViewWithTag(view.tag)
             view.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
                 if (!isChecked)
                     mainFilterButtonOnUnchecked(view)
             })
-            view.setOnClickListener {
-                mainFilterButtonOnClick(view)
-            }
-            for (subFilter in subFilters) {
-                if (subFilter !is RadioButton)
-                    continue
-                subFilter.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) {
-                        secondaryFilterButtonOn(subFilter, subFilters)
-                    }
-                })
-            }
         }
-    }
-
-    private fun mainFilterButtonOnClick(button: RadioButton) {
-        if (filters[button]?.visibility == View.VISIBLE)
-            filters[button]?.visibility = View.GONE
-        else
-            filters[button]?.visibility = View.VISIBLE
     }
 
     private fun mainFilterButtonOnUnchecked(button: RadioButton) {
         filters[button]?.visibility = View.GONE
     }
 
-    private fun secondaryFilterButtonOn(button: RadioButton, view: RadioGroup) {
+    public fun mainFilterButtonOnClick(button: RadioButton) {
+        if (filters[button]?.visibility == View.VISIBLE)
+            filters[button]?.visibility = View.GONE
+        else
+            filters[button]?.visibility = View.VISIBLE
+    }
+
+    public fun secondaryFilterButtonOnClick(button: RadioButton) {
     }
 }
