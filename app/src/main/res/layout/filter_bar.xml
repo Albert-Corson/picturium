@@ -10,21 +10,22 @@
         android:id="@+id/rgMainFilterButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:checkedButton="@id/filterBar_rbMainViral"
         android:orientation="horizontal">
 
         <RadioButton
-            style="@style/AppTheme.TopBar.MainFilterButton"
-            android:checked="true"
+            android:id="@+id/filterBar_rbMainViral"
+            style="@style/AppTheme.FilterBar.MainFilterButton"
             android:tag="viral"
             android:text="@string/filter_button_viral" />
 
         <RadioButton
-            style="@style/AppTheme.TopBar.MainFilterButton"
+            style="@style/AppTheme.FilterBar.MainFilterButton"
             android:tag="top"
             android:text="@string/filter_button_top" />
 
         <RadioButton
-            style="@style/AppTheme.TopBar.MainFilterButton"
+            style="@style/AppTheme.FilterBar.MainFilterButton"
             android:tag="user"
             android:text="@string/filter_button_user" />
     </RadioGroup>
@@ -35,44 +36,33 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="5dp">
 
-        <RadioGroup
-            android:layout_width="match_parent"
+        <include
+            layout="@layout/filter_buttons_viral"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:tag="viral"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <include layout="@layout/filter_buttons_viral" />
-        </RadioGroup>
+        </include>
 
-        <RadioGroup
-            android:layout_width="match_parent"
+        <include
+            layout="@layout/filter_buttons_top"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:tag="top"
-            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            layout="@layout/filter_buttons_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <include layout="@layout/filter_buttons_top" />
-        </RadioGroup>
-
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:tag="user"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <include layout="@layout/filter_buttons_user" />
-        </RadioGroup>
+        </include>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

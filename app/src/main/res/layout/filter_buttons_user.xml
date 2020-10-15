@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RadioButton
-        style="@style/AppTheme.TopBar.SecondaryFilterButton"
-        android:checked="true"
-        android:text="@string/filter_button_user_popular" />
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checkedButton="@id/filterBar_user_rbPopular"
+        android:orientation="horizontal"
+        android:tag="user"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-    <RadioButton
-        style="@style/AppTheme.TopBar.SecondaryFilterButton"
-        android:text="@string/filter_button_user_newest" />
+        <RadioButton
+            android:id="@+id/filterBar_user_rbPopular"
+            style="@style/AppTheme.FilterBar.SecondaryFilterButton"
+            android:text="@string/filter_button_user_popular" />
 
-    <RadioButton
-        style="@style/AppTheme.TopBar.SecondaryFilterButton"
-        android:text="@string/filter_button_user_rising" />
+        <RadioButton
+            style="@style/AppTheme.FilterBar.SecondaryFilterButton"
+            android:text="@string/filter_button_user_newest" />
+
+        <RadioButton
+            style="@style/AppTheme.FilterBar.SecondaryFilterButton"
+            android:text="@string/filter_button_user_rising" />
+    </RadioGroup>
 </merge>
