@@ -43,6 +43,7 @@
         <item name="android:background">@drawable/ic_filter_button</item>
         <item name="android:backgroundTint" tools:targetApi="lollipop">@color/main_filter_button_background</item>
         <item name="android:button">@null</item>
+        <item name="android:onClick">mainFilterBtnOnClick</item>
     </style>
 
     <style name="AppTheme.TopBar.SecondaryFilterButton" parent="AppTheme.TopBar.MainFilterButton">
@@ -53,6 +54,7 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/secondary_filter_text</item>
         <item name="android:backgroundTint" tools:targetApi="lollipop">@color/secondary_filter_button_background</item>
+        <item name="android:onClick">secondaryFilterBtnOnClick</item>
     </style>
 
 </resources>
