@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 
 class MainActivity : AppCompatActivity() {
-    lateinit var filterBtnManager: FilterButtonsManager
+    private lateinit var filterBtnManager: FilterButtonsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
         filterBtnManager = FilterButtonsManager(this)
 
-        val searchBar: SearchView = findViewById(R.id.svSearchBar)
+        val searchBar: SearchView = findViewById(R.id.topBar_svSearchBar)
         searchBar.setOnQueryTextListener(SearchBarQueryListener(searchBar))
     }
 
