@@ -20,7 +20,7 @@
         android:tooltipText="@string/profile_btn_description" />
 
     <androidx.appcompat.widget.SearchView
-        android:id="@+id/svSearchBar"
+        android:id="@+id/topBar_svSearchBar"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

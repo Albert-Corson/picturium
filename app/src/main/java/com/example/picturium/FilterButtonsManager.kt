@@ -12,8 +12,8 @@ class FilterButtonsManager(activity: AppCompatActivity) {
     private val filters: HashMap<RadioButton, RadioGroup> = HashMap()
 
     init {
-        val mainFilters: RadioGroup = activity.findViewById(R.id.rgMainFilterButtons)
-        val secondaryFilters: ConstraintLayout = activity.findViewById(R.id.clSecondaryFilterButtons)
+        val mainFilters: RadioGroup = activity.findViewById(R.id.filterBar_rgMainFilterButtons)
+        val secondaryFilters: ConstraintLayout = activity.findViewById(R.id.filterBar_clSecondaryFilterButtons)
         for (view in mainFilters) {
             if (view !is RadioButton)
                 continue

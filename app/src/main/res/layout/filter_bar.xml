@@ -7,7 +7,7 @@
     android:theme="@style/AppTheme.FilterBar">
 
     <RadioGroup
-        android:id="@+id/rgMainFilterButtons"
+        android:id="@+id/filterBar_rgMainFilterButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:checkedButton="@id/filterBar_rbMainViral"
@@ -31,7 +31,7 @@
     </RadioGroup>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clSecondaryFilterButtons"
+        android:id="@+id/filterBar_clSecondaryFilterButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="5dp">
