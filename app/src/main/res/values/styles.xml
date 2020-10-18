@@ -1,12 +1,18 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="AppTheme"
+        parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/primaryAccent</item>
 
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/black</item>
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/primaryDark</item>
+        <item name="android:statusBarColor"
+            tools:targetApi="lollipop">@android:color/black
+        </item>
+        <item name="android:navigationBarColor"
+            tools:targetApi="lollipop">@color/primaryDark
+        </item>
 
         <item name="android:windowBackground">@color/primaryDark</item>
         <item name="android:editTextColor">@android:color/white</item>
@@ -41,19 +47,24 @@
         <item name="android:textColor">@color/main_filter_button_text</item>
         <item name="android:textAlignment">center</item>
         <item name="android:background">@drawable/ic_filter_button</item>
-        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/main_filter_button_background</item>
+        <item name="android:backgroundTint"
+            tools:targetApi="lollipop">@color/main_filter_button_background
+        </item>
         <item name="android:button">@null</item>
         <item name="android:onClick">mainFilterBtnOnClick</item>
     </style>
 
-    <style name="AppTheme.FilterBar.SecondaryFilterButton" parent="AppTheme.FilterBar.MainFilterButton">
+    <style name="AppTheme.FilterBar.SecondaryFilterButton"
+        parent="AppTheme.FilterBar.MainFilterButton">
         <item name="android:layout_width">62dp</item>
         <item name="android:layout_height">26dp</item>
         <item name="android:layout_margin">2.5dp</item>
         <item name="android:textSize">11sp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/secondary_filter_text</item>
-        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/secondary_filter_button_background</item>
+        <item name="android:backgroundTint"
+            tools:targetApi="lollipop">@color/secondary_filter_button_background
+        </item>
         <item name="android:onClick">secondaryFilterBtnOnClick</item>
     </style>
 

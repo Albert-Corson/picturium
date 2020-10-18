@@ -1,39 +1,67 @@
 package com.example.picturium
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
+import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.top_bar.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var filterBtnManager: FilterButtonsManager
+    private lateinit var _filterBtnManager: FilterButtonsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        filterBtnManager = FilterButtonsManager(this)
+        GlobalScope.launch(Dispatchers.IO) {
+            User.init(this@MainActivity.applicationContext)
+            withContext(Dispatchers.Main) {
+                _setProfileBtnImage()
+            }
+        }
 
-        val searchBar: SearchView = findViewById(R.id.topBar_svSearchBar)
-        searchBar.setOnQueryTextListener(SearchBarQueryListener(searchBar))
+        topBar_svSearchBar.setOnQueryTextListener(SearchBarQueryListener(topBar_svSearchBar))
+        _filterBtnManager = FilterButtonsManager(this)
     }
 
-    public fun profileBtnOnClick(view: View) {
+    private fun _setProfileBtnImage() {
+        Glide.with(this)
+            .load(User.publicData?.profilePicture)
+            .circleCrop()
+            .placeholder(R.drawable.ic_dflt_profile)
+            .error(R.drawable.ic_dflt_profile)
+            .into(topBar_ibProfile)
     }
 
-    public fun uploadBtnOnClick(view: View) {
+    override fun onResume() {
+        super.onResume()
+        _setProfileBtnImage()
     }
 
-    public fun mainFilterBtnOnClick(button: View) {
+    fun profileBtnOnClick(view: View) {
+        val intent: Intent = Intent(this, ProfileActivity::class.java)
+        startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_left, R.anim.fade_out)
+    }
+
+    fun uploadBtnOnClick(view: View) {
+    }
+
+    fun mainFilterBtnOnClick(button: View) {
         if (button !is RadioButton)
             return
-        filterBtnManager.mainFilterButtonOnClick(button)
+        _filterBtnManager.mainFilterButtonOnClick(button)
     }
 
-    public fun secondaryFilterBtnOnClick(button: View) {
+    fun secondaryFilterBtnOnClick(button: View) {
         if (button !is RadioButton)
             return
-        filterBtnManager.secondaryFilterButtonOnClick(button)
+        _filterBtnManager.secondaryFilterButtonOnClick(button)
     }
 }

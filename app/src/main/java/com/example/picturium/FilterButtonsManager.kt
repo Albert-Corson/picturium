@@ -9,7 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.iterator
 
 class FilterButtonsManager(activity: AppCompatActivity) {
-    private val filters: HashMap<RadioButton, RadioGroup> = HashMap()
+    private val _filters: HashMap<RadioButton, RadioGroup> = HashMap()
 
     init {
         val mainFilters: RadioGroup = activity.findViewById(R.id.filterBar_rgMainFilterButtons)
@@ -17,25 +17,25 @@ class FilterButtonsManager(activity: AppCompatActivity) {
         for (view in mainFilters) {
             if (view !is RadioButton)
                 continue
-            filters[view] = secondaryFilters.findViewWithTag(view.tag)
+            _filters[view] = secondaryFilters.findViewWithTag(view.tag)
             view.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
                 if (!isChecked)
-                    mainFilterButtonOnUnchecked(view)
+                    _mainFilterButtonOnUnchecked(view)
             })
         }
     }
 
-    private fun mainFilterButtonOnUnchecked(button: RadioButton) {
-        filters[button]?.visibility = View.GONE
+    private fun _mainFilterButtonOnUnchecked(button: RadioButton) {
+        _filters[button]?.visibility = View.GONE
     }
 
-    public fun mainFilterButtonOnClick(button: RadioButton) {
-        if (filters[button]?.visibility == View.VISIBLE)
-            filters[button]?.visibility = View.GONE
+    fun mainFilterButtonOnClick(button: RadioButton) {
+        if (_filters[button]?.visibility == View.VISIBLE)
+            _filters[button]?.visibility = View.GONE
         else
-            filters[button]?.visibility = View.VISIBLE
+            _filters[button]?.visibility = View.VISIBLE
     }
 
-    public fun secondaryFilterButtonOnClick(button: RadioButton) {
+    fun secondaryFilterButtonOnClick(button: RadioButton) {
     }
 }
