@@ -8,12 +8,16 @@ android {
 
     defaultConfig {
         applicationId "com.example.picturium"
-        minSdkVersion 19
+        minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField 'String', 'CALLBACK_URL', '"' + CALLBACK_SCHEME + '://' + CALLBACK_HOST + '"'
+        buildConfigField 'String', 'CLIENT_ID', CLIENT_ID
+        buildConfigField 'String', 'CLIENT_SECRET', CLIENT_SECRET
     }
 
     buildTypes {
@@ -33,5 +37,12 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.0-M1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.0-M1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-beta01'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 }
