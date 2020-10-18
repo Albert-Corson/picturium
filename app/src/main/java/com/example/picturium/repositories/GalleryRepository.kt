@@ -6,10 +6,10 @@ import com.example.picturium.models.ThreadData
 
 class GalleryRepository {
 
-    suspend fun getGallery(option: String): List<ThreadData> {
+    suspend fun getGallery(section: String, sort: String, window: String): List<ThreadData> {
 
         val response = ImgurAPI.instance
-            .getGallery("hot/viral/day", 1, false, false, false)
+            .getGallery(section, sort, window, 1, false, false, false)
 
         if (response.isSuccessful) {
             return response.body()!!.data

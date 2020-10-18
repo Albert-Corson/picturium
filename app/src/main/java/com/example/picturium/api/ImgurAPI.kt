@@ -45,9 +45,11 @@ interface ImgurAPI {
             .create(ImgurAPI::class.java)
     }
 
-    @GET("3/gallery/{option}/{page}")
+    @GET("3/gallery/{section}/{sort}/{window}/{page}")
     suspend fun getGallery(
-        @Path("option") window: String,
+        @Path("section") section: String,
+        @Path("sort") sort: String,
+        @Path("window") window: String,
         @Path("page") page: Int,
         @Query("showViral") showViral: Boolean,
         @Query("mature") mature: Boolean,

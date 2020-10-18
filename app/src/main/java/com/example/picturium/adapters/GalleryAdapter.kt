@@ -11,6 +11,12 @@ import com.example.picturium.databinding.ItemThreadBinding
 import com.example.picturium.models.ThreadData
 
 class GalleryAdapter(private var mData: List<ThreadData>) : RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
+
+    fun setData(list : List<ThreadData>) {
+        mData = list
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
         val binding: ItemThreadBinding = ItemThreadBinding
             .inflate(LayoutInflater.from(parent.context), parent, false)
