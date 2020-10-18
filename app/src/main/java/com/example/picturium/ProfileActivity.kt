@@ -10,14 +10,14 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
     }
 
-    public fun loginBtnOnClick(view: View) {
+    fun loginBtnOnClick(view: View) {
         if (!User.isLoggedIn())
-            ImgurAPI.redirectToLogin(this)
+            User.redirectToLogin(this)
     }
 
     override fun onResume() {
         super.onResume()
-        ImgurAPI.handleLoginCallback(intent.data)
+        User.handleLoginCallback(intent.data)
     }
 
     override fun finish() {

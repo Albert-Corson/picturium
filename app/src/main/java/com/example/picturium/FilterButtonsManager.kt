@@ -20,22 +20,22 @@ class FilterButtonsManager(activity: AppCompatActivity) {
             _filters[view] = secondaryFilters.findViewWithTag(view.tag)
             view.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
                 if (!isChecked)
-                    mainFilterButtonOnUnchecked(view)
+                    _mainFilterButtonOnUnchecked(view)
             })
         }
     }
 
-    private fun mainFilterButtonOnUnchecked(button: RadioButton) {
+    private fun _mainFilterButtonOnUnchecked(button: RadioButton) {
         _filters[button]?.visibility = View.GONE
     }
 
-    public fun mainFilterButtonOnClick(button: RadioButton) {
+    fun mainFilterButtonOnClick(button: RadioButton) {
         if (_filters[button]?.visibility == View.VISIBLE)
             _filters[button]?.visibility = View.GONE
         else
             _filters[button]?.visibility = View.VISIBLE
     }
 
-    public fun secondaryFilterButtonOnClick(button: RadioButton) {
+    fun secondaryFilterButtonOnClick(button: RadioButton) {
     }
 }

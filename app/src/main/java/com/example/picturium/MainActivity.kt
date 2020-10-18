@@ -5,7 +5,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.top_bar.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private lateinit var _filterBtnManager: FilterButtonsManager
@@ -14,27 +19,47 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        User(this.applicationContext)
-        _filterBtnManager = FilterButtonsManager(this)
+        GlobalScope.launch(Dispatchers.IO) {
+            User.init(this@MainActivity.applicationContext)
+            withContext(Dispatchers.Main) {
+                _setProfileBtnImage()
+            }
+        }
+
         topBar_svSearchBar.setOnQueryTextListener(SearchBarQueryListener(topBar_svSearchBar))
+        _filterBtnManager = FilterButtonsManager(this)
     }
 
-    public fun profileBtnOnClick(view: View) {
+    private fun _setProfileBtnImage() {
+        Glide.with(this)
+            .load(User.publicData?.profilePicture)
+            .circleCrop()
+            .placeholder(R.drawable.ic_dflt_profile)
+            .error(R.drawable.ic_dflt_profile)
+            .into(topBar_ibProfile)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        _setProfileBtnImage()
+    }
+
+    fun profileBtnOnClick(view: View) {
         val intent: Intent = Intent(this, ProfileActivity::class.java)
         startActivity(intent)
         overridePendingTransition(R.anim.slide_in_left, R.anim.fade_out)
     }
 
-    public fun uploadBtnOnClick(view: View) {
+    fun uploadBtnOnClick(view: View) {
     }
 
-    public fun mainFilterBtnOnClick(button: View) {
+    fun mainFilterBtnOnClick(button: View) {
         if (button !is RadioButton)
             return
         _filterBtnManager.mainFilterButtonOnClick(button)
     }
 
-    public fun secondaryFilterBtnOnClick(button: View) {
+    fun secondaryFilterBtnOnClick(button: View) {
         if (button !is RadioButton)
             return
         _filterBtnManager.secondaryFilterButtonOnClick(button)

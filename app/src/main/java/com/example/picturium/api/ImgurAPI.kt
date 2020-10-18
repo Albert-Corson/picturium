@@ -1,10 +1,9 @@
 package com.example.picturium.api
 
 import com.example.picturium.BuildConfig
-// import com.example.picturium.User
+import com.example.picturium.User
 import com.example.picturium.api.request.RefreshTokenRequest
 import com.example.picturium.api.response.GalleryResponse
-import com.example.picturium.api.response.GenericResponse
 import com.example.picturium.api.response.RefreshTokenResponse
 import com.example.picturium.api.response.UserDataResponse
 import okhttp3.Interceptor
@@ -24,9 +23,9 @@ interface ImgurAPI {
                 return chain.proceed(req)
 
             val reqBuilder = req.newBuilder()
-            // if (User.isLoggedIn())
-            //     reqBuilder.header("Authorization", "Bearer ${User.accessToken}")
-            // else
+            if (User.isLoggedIn())
+                reqBuilder.header("Authorization", "Bearer ${User.accessToken}")
+            else
                 reqBuilder.header("Authorization", "Client-ID ${BuildConfig.CLIENT_ID}")
             return chain.proceed(reqBuilder.build())
         }

@@ -9,6 +9,7 @@
     android:theme="@style/AppTheme.TopBar">
 
     <ImageButton
+        android:id="@+id/topBar_ibProfile"
         tools:targetApi="o"
         android:layout_width="@android:dimen/app_icon_size"
         android:layout_height="@android:dimen/app_icon_size"

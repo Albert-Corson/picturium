@@ -1,189 +1,116 @@
 package com.example.picturium
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import android.widget.Toast
+import com.example.picturium.api.ImgurAPI
+import com.example.picturium.api.response.RefreshTokenResponse
+import com.example.picturium.api.response.UserDataResponse
+import com.example.picturium.models.UserData
 import com.google.gson.Gson
-import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
-import java.io.IOException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import retrofit2.Response
 
-class User(private val _context: Context) {
-    init {
-        User._cache = _context.getSharedPreferences("userCache", Context.MODE_PRIVATE)
-        User._context = _context
-        User.init()
-    }
+object User {
+    private lateinit var _context: Context
+    private lateinit var _cache: SharedPreferences
+    var publicData: UserData? = null
+    var accessToken: String? = null
+    var refreshToken: String? = null
 
-    companion object {
-        private lateinit var _context: Context
-        private lateinit var _cache: SharedPreferences
-        private var _hasCredentials: Boolean = false
-        var data: UserData? = null
-        var userName: String? = null
-        var accountId: String? = null
-        var accessToken: String? = null
-        var refreshToken: String? = null
-        var tokenType: String? = null
+    suspend fun init(context: Context) {
+        _context = context
+        _cache = _context.getSharedPreferences("userCache", Context.MODE_PRIVATE)
 
-        private fun init() {
-            loadCredentials()
-            checkAccessToken()
-            loadData()
-        }
-
-        private fun loadCredentials() {
-            if (!_cache.contains("userName"))
-                return
-            userName = _cache.getString("userName", null)
-            accountId = _cache.getString("accountId", null)
-            accessToken = _cache.getString("accessToken", null)
-            refreshToken = _cache.getString("refreshToken", null)
-            tokenType = _cache.getString("tokenType", null)
-            _hasCredentials = true
-        }
-
-        private fun checkAccessToken() {
-            if (!_hasCredentials)
-                return
-
-            val clt = OkHttpClient()
-            val checkReq: Request = Request.Builder()
-                .get()
-                .url("https://api.imgur.com/oauth2/secret")
-                .header("Authorization", "Bearer $accessToken")
-                .build()
-
-            clt.newCall(checkReq).enqueue(object : Callback {
-                override fun onResponse(call: Call, response: Response) {}
-
-                override fun onFailure(call: Call, e: IOException) {
-                    val body: RequestBody = MultipartBody.Builder()
-                        .addFormDataPart("refresh_token", refreshToken!!)
-                        .addFormDataPart("client_id", BuildConfig.CLIENT_ID)
-                        .addFormDataPart("client_secret", BuildConfig.CLIENT_SECRET)
-                        .addFormDataPart("grant_type", "refresh_token")
-                        .setType("application/json; charset=utf-8".toMediaType())
-                        .build()
-
-                    val refreshReq: Request = Request.Builder()
-                        .post(body)
-                        .url("https://api.imgur.com/oauth2/token")
-                        .header("Authorization", "Client-ID ${BuildConfig.CLIENT_ID}")
-                        .build()
-
-                    clt.newCall(refreshReq).enqueue(object : Callback {
-                        override fun onResponse(call: Call, response: Response) {
-                            val gson = Gson()
-                            val resBody: String = response.body?.string().toString()
-
-                            val refreshedToken: RefreshTokenResponse = gson.fromJson(resBody, RefreshTokenResponse::class.java)
-                            accessToken = refreshedToken.access_token
-                        }
-
-                        override fun onFailure(call: Call, e: IOException) {
-                            logout()
-                            Toast.makeText(_context, "Couldn't retrieve data, please log back in", Toast.LENGTH_LONG).show()
-                        }
-                    })
-                }
-            })
-        }
-
-        private fun loadData() {
-            if (!_hasCredentials)
-                return
-
-            val clt = OkHttpClient()
-            val req: Request = Request.Builder()
-                .get()
-                .url("https://api.imgur.com/3/account/$userName")
-                .header("Authorization", "Client-ID ${BuildConfig.CLIENT_ID}")
-                .build()
-
-            clt.newCall(req).enqueue(object : Callback {
-                override fun onResponse(call: Call, response: Response) {
-                    val gson = Gson()
-                    val resBody: String = response.body?.string().toString()
-
-                    data = gson.fromJson(resBody, UserDataResponse::class.java).data
-                }
-
-                override fun onFailure(call: Call, e: IOException) {
-                    logout()
-                    Toast.makeText(_context, "Couldn't retrieve data, please log back in", Toast.LENGTH_LONG).show()
-                }
-            })
-        }
-
-        fun login(credentialsUri: Uri) {
-            userName = credentialsUri.getQueryParameter("account_username")
-            if (userName.isNullOrEmpty()) {
+        _loadFromCache()
+        if (!isLoggedIn())
+            return
+        if (!ImgurAPI.instance.checkAccessToken().isSuccessful) {
+            val response: Response<RefreshTokenResponse> = ImgurAPI.instance.refreshAccessToken()
+            if (!response.isSuccessful) {
                 logout()
                 return
+            } else {
+                accessToken = response.body()!!.data.accessToken
             }
-            accountId = credentialsUri.getQueryParameter("account_id")
-            accessToken = credentialsUri.getQueryParameter("access_token")
-            refreshToken = credentialsUri.getQueryParameter("refresh_token")
-            tokenType = credentialsUri.getQueryParameter("token_type")
-            _hasCredentials = true
-            val editor: SharedPreferences.Editor = _cache.edit()
-            editor.putString("userName", userName)
-            editor.putString("accountId", accountId)
-            editor.putString("accessToken", accessToken)
-            editor.putString("refreshToken", refreshToken)
-            editor.putString("tokenType", tokenType)
-            editor.apply()
-            loadData()
         }
-
-        fun logout() {
-            _cache.edit().clear().apply()
-            data = null
-            userName = null
-            accountId = null
-            accessToken = null
-            refreshToken = null
-            tokenType = null
-        }
-
-        fun isLoggedIn(): Boolean {
-            return data != null
+        if (_loadPublicData(publicData!!.username)) {
+            save()
+        } else {
+            logout()
         }
     }
 
-    private data class UserDataResponse(
-        val data: UserData,
-        val status: Int,
-        val success: Boolean
-    )
+    private fun _loadFromCache() {
+        if (!_cache.contains("publicData")) {
+            logout()
+            return
+        }
+        publicData = Gson().fromJson(_cache.getString("publicData", ""), UserData::class.java)
+        accessToken = _cache.getString("accessToken", null)
+        refreshToken = _cache.getString("refreshToken", null)
+    }
 
-    data class UserData(
-        val avatar: String,
-        val avatar_name: String,
-        val bio: Any,
-        val cover: String,
-        val cover_name: String,
-        val created: Int,
-        val id: Int,
-        val is_blocked: Boolean,
-        val pro_expiration: Boolean,
-        val reputation: Int,
-        val reputation_name: String,
-        val url: String,
-        val user_follow: UserFollow
-    )
+    private suspend fun _loadPublicData(username: String): Boolean {
+        val response: Response<UserDataResponse> = ImgurAPI.instance.getUserData(username)
 
-    data class UserFollow(
-        val status: Boolean
-    )
+        if (!response.isSuccessful)
+            return false
+        publicData = response.body()!!.data
+        return true
+    }
 
-    private data class RefreshTokenResponse(
-        val access_token: String,
-        val account_username: String,
-        val expires_in: Int,
-        val refresh_token: String,
-        val token_type: String
-    )
+    fun redirectToLogin(context: Context) {
+        val intent: Intent = Intent(Intent.ACTION_VIEW, Uri.parse(ImgurAPI.LOGIN_URL))
+        context.startActivity(intent)
+    }
+
+    fun handleLoginCallback(uri: Uri?) {
+        val params = uri?.encodedFragment
+
+        if (params == null || !uri.toString().startsWith(BuildConfig.CALLBACK_URL))
+            return
+        val parsed: Uri = Uri.parse("_://?$params")
+        User._login(parsed)
+    }
+
+    fun _login(credentialsUri: Uri) {
+        val username: String? = credentialsUri.getQueryParameter("account_username")
+        accessToken = credentialsUri.getQueryParameter("access_token")
+        refreshToken = credentialsUri.getQueryParameter("refresh_token")
+        if (username.isNullOrEmpty() || accessToken.isNullOrEmpty() || refreshToken.isNullOrEmpty()) {
+            logout()
+            return
+        }
+        GlobalScope.launch(Dispatchers.IO) {
+            if (_loadPublicData(username)) {
+                save()
+            } else {
+                logout()
+            }
+        }
+    }
+
+    fun logout() {
+        _cache.edit().clear().apply()
+        publicData = null
+        accessToken = null
+        refreshToken = null
+    }
+
+    fun save() {
+        val editor: SharedPreferences.Editor = _cache.edit()
+
+        editor.putString("publicData", Gson().toJson(publicData).toString())
+        editor.putString("accessToken", accessToken)
+        editor.putString("refreshToken", refreshToken)
+        editor.apply()
+    }
+
+    fun isLoggedIn(): Boolean {
+        return publicData != null
+    }
 }

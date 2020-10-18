@@ -15,6 +15,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        manifestPlaceholders = [CALLBACK_HOST: CALLBACK_HOST, CALLBACK_SCHEME: CALLBACK_SCHEME]
+
         buildConfigField 'String', 'CALLBACK_URL', '"' + CALLBACK_SCHEME + '://' + CALLBACK_HOST + '"'
         buildConfigField 'String', 'CLIENT_ID', CLIENT_ID
         buildConfigField 'String', 'CLIENT_SECRET', CLIENT_SECRET
@@ -38,6 +40,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.0-M1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.0-M1'
