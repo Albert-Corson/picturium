@@ -43,6 +43,7 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page) {
     private fun _setProfileBtnImage() {
         Glide.with(this)
             .load(User.publicData?.profilePicture)
+            .fallback(R.drawable.ic_dflt_profile)
             .circleCrop()
             .into(topBar_ibProfile)
     }
