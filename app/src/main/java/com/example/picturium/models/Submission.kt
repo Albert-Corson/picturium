@@ -16,7 +16,7 @@ data class Submission(
     val id: String,
     val title: String,
     val description: String?,
-    val cover: (String)?,
+    val cover: String?,
     val width: Int?,
     val height: Int?,
     val link: String,

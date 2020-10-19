@@ -27,8 +27,8 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _filterBtnManager = FilterButtonsManager(this.requireActivity())
 
+        _filterBtnManager = FilterButtonsManager(this.requireActivity())
         topBar_svSearchBar.setOnQueryTextListener(SearchBarQueryListener(topBar_svSearchBar, this))
         topBar_ibProfile.setOnClickListener { profileBtnOnClick() }
         topBar_ibUpload.setOnClickListener { uploadBtnOnClick() }

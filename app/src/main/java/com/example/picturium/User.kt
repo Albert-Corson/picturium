@@ -7,9 +7,6 @@ import android.net.Uri
 import com.example.picturium.api.ImgurAPI
 import com.example.picturium.models.UserData
 import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 object User {
     private lateinit var _context: Context
@@ -38,13 +35,13 @@ object User {
         }
 
         if (_loadPublicData()) {
-            save()
+            _save()
         } else {
             logout()
         }
     }
 
-    suspend fun _refreshAccessToken(): Boolean {
+    private suspend fun _refreshAccessToken(): Boolean {
         val tokenRefresh = ImgurAPI.safeCall {
             ImgurAPI.instance.refreshAccessToken()
         }
@@ -59,7 +56,7 @@ object User {
         return false
     }
 
-    fun _login(credentialsUri: Uri) {
+    private suspend fun _login(credentialsUri: Uri) {
         val username: String? = credentialsUri.getQueryParameter("account_username")
         accessToken = credentialsUri.getQueryParameter("access_token")
         refreshToken = credentialsUri.getQueryParameter("refresh_token")
@@ -67,13 +64,7 @@ object User {
             logout()
             return
         }
-        GlobalScope.launch(Dispatchers.IO) {
-            if (_loadPublicData()) {
-                save()
-            } else {
-                logout()
-            }
-        }
+        _loadPublicData()
     }
 
     private fun _loadFromCache() {
@@ -95,6 +86,7 @@ object User {
             is ImgurAPI.CallResult.ErrorResponse -> logout()
             is ImgurAPI.CallResult.SuccessResponse -> {
                 publicData = res.body.data
+                _save()
                 return true
             }
         }
@@ -106,13 +98,13 @@ object User {
         context.startActivity(intent)
     }
 
-    fun handleLoginCallback(uri: Uri?) {
+    suspend fun handleLoginCallback(uri: Uri?) {
         val params = uri?.encodedFragment
 
         if (params == null || !uri.toString().startsWith(BuildConfig.CALLBACK_URL))
             return
         val parsed: Uri = Uri.parse("_://?$params")
-        User._login(parsed)
+        _login(parsed)
     }
 
     fun logout() {
@@ -122,7 +114,7 @@ object User {
         refreshToken = null
     }
 
-    fun save() {
+    private fun _save() {
         val editor: SharedPreferences.Editor = _cache.edit()
 
         editor.putString("publicData", Gson().toJson(publicData).toString())
@@ -133,5 +125,39 @@ object User {
 
     fun isLoggedIn(): Boolean {
         return publicData != null
+    }
+
+    suspend fun loadSubmissions(): Boolean {
+        if (!isLoggedIn())
+            return false
+        val res = ImgurAPI.safeCall {
+            ImgurAPI.instance.getSubmissionsFrom()
+        }
+        when (res) {
+            is ImgurAPI.CallResult.NetworkError -> TODO("Toast no internet")
+            is ImgurAPI.CallResult.ErrorResponse -> logout()
+            is ImgurAPI.CallResult.SuccessResponse -> {
+                publicData!!.submissions = res.body.data
+                return true
+            }
+        }
+        return false
+    }
+
+    suspend fun loadFavorites(): Boolean {
+        if (!isLoggedIn())
+            return false
+        val res = ImgurAPI.safeCall {
+            ImgurAPI.instance.getFavoritesFrom()
+        }
+        when (res) {
+            is ImgurAPI.CallResult.NetworkError -> TODO("Toast no internet")
+            is ImgurAPI.CallResult.ErrorResponse -> logout()
+            is ImgurAPI.CallResult.SuccessResponse -> {
+                publicData!!.favorites = res.body.data
+                return true
+            }
+        }
+        return false
     }
 }
