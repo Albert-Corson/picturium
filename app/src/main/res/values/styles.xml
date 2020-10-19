@@ -51,7 +51,6 @@
             tools:targetApi="lollipop">@color/main_filter_button_background
         </item>
         <item name="android:button">@null</item>
-        <item name="android:onClick">mainFilterBtnOnClick</item>
     </style>
 
     <style name="AppTheme.FilterBar.SecondaryFilterButton"
@@ -65,7 +64,6 @@
         <item name="android:backgroundTint"
             tools:targetApi="lollipop">@color/secondary_filter_button_background
         </item>
-        <item name="android:onClick">secondaryFilterBtnOnClick</item>
     </style>
 
 </resources>
