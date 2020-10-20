@@ -5,14 +5,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import com.example.picturium.api.ImgurAPI
-import com.example.picturium.api.response.RefreshTokenResponse
-import com.example.picturium.api.response.UserDataResponse
 import com.example.picturium.models.UserData
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 object User {
     private lateinit var _context: Context
@@ -28,19 +25,54 @@ object User {
         _loadFromCache()
         if (!isLoggedIn())
             return
-        if (!ImgurAPI.instance.checkAccessToken().isSuccessful) {
-            val response: Response<RefreshTokenResponse> = ImgurAPI.instance.refreshAccessToken()
-            if (!response.isSuccessful) {
-                logout()
-                return
-            } else {
-                accessToken = response.body()!!.data.accessToken
-            }
+
+        val tokenCheck = ImgurAPI.safeCall {
+            ImgurAPI.instance.checkAccessToken()
         }
-        if (_loadPublicData(publicData!!.username)) {
+
+        if (tokenCheck is ImgurAPI.CallResult.NetworkError) {
+            TODO("Toast no internet")
+            return
+        } else if (tokenCheck is ImgurAPI.CallResult.ErrorResponse && !_refreshAccessToken()) {
+            return
+        }
+
+        if (_loadPublicData()) {
             save()
         } else {
             logout()
+        }
+    }
+
+    suspend fun _refreshAccessToken(): Boolean {
+        val tokenRefresh = ImgurAPI.safeCall {
+            ImgurAPI.instance.refreshAccessToken()
+        }
+        when (tokenRefresh) {
+            is ImgurAPI.CallResult.NetworkError -> TODO("Toast no internet")
+            is ImgurAPI.CallResult.ErrorResponse -> logout()
+            is ImgurAPI.CallResult.SuccessResponse -> {
+                accessToken = tokenRefresh.body.data.accessToken
+                return true
+            }
+        }
+        return false
+    }
+
+    fun _login(credentialsUri: Uri) {
+        val username: String? = credentialsUri.getQueryParameter("account_username")
+        accessToken = credentialsUri.getQueryParameter("access_token")
+        refreshToken = credentialsUri.getQueryParameter("refresh_token")
+        if (username.isNullOrEmpty() || accessToken.isNullOrEmpty() || refreshToken.isNullOrEmpty()) {
+            logout()
+            return
+        }
+        GlobalScope.launch(Dispatchers.IO) {
+            if (_loadPublicData()) {
+                save()
+            } else {
+                logout()
+            }
         }
     }
 
@@ -54,13 +86,19 @@ object User {
         refreshToken = _cache.getString("refreshToken", null)
     }
 
-    private suspend fun _loadPublicData(username: String): Boolean {
-        val response: Response<UserDataResponse> = ImgurAPI.instance.getUserData(username)
-
-        if (!response.isSuccessful)
-            return false
-        publicData = response.body()!!.data
-        return true
+    private suspend fun _loadPublicData(): Boolean {
+        val res = ImgurAPI.safeCall {
+            ImgurAPI.instance.getUserData()
+        }
+        when (res) {
+            is ImgurAPI.CallResult.NetworkError -> TODO("Toast no internet")
+            is ImgurAPI.CallResult.ErrorResponse -> logout()
+            is ImgurAPI.CallResult.SuccessResponse -> {
+                publicData = res.body.data
+                return true
+            }
+        }
+        return false
     }
 
     fun redirectToLogin(context: Context) {
@@ -75,23 +113,6 @@ object User {
             return
         val parsed: Uri = Uri.parse("_://?$params")
         User._login(parsed)
-    }
-
-    fun _login(credentialsUri: Uri) {
-        val username: String? = credentialsUri.getQueryParameter("account_username")
-        accessToken = credentialsUri.getQueryParameter("access_token")
-        refreshToken = credentialsUri.getQueryParameter("refresh_token")
-        if (username.isNullOrEmpty() || accessToken.isNullOrEmpty() || refreshToken.isNullOrEmpty()) {
-            logout()
-            return
-        }
-        GlobalScope.launch(Dispatchers.IO) {
-            if (_loadPublicData(username)) {
-                save()
-            } else {
-                logout()
-            }
-        }
     }
 
     fun logout() {

@@ -7,24 +7,31 @@ class GalleryRepository {
 
     suspend fun getGallery(section: String, sort: String, window: String): List<Submission> {
 
-        val response = ImgurAPI.instance
-            .getGallery(section, sort, window, 1, false, false, false)
-
-        if (response.isSuccessful) {
-            return response.body()!!.data
+        val res = ImgurAPI.safeCall {
+            ImgurAPI.instance.getGallery(section, sort, window, 1)
         }
-        return emptyList()
+        return when (res) {
+            is ImgurAPI.CallResult.SuccessResponse -> res.body.data
+            is ImgurAPI.CallResult.ErrorResponse -> emptyList()
+            is ImgurAPI.CallResult.NetworkError -> {
+                TODO("Toast no internet")
+                emptyList()
+            }
+        }
     }
 
     suspend fun getSearchGallery(sort: String, window: String, query: String): List<Submission> {
 
-        val response = ImgurAPI.instance
-            .getSearchGallery(sort, window, 1, query)
-
-        println(response)
-        if (response.isSuccessful) {
-            return response.body()!!.data
+        val res = ImgurAPI.safeCall {
+            ImgurAPI.instance.getSearchGallery(sort, window, 1, query)
         }
-        return emptyList()
+        return when (res) {
+            is ImgurAPI.CallResult.SuccessResponse -> res.body.data
+            is ImgurAPI.CallResult.ErrorResponse -> emptyList()
+            is ImgurAPI.CallResult.NetworkError -> {
+                TODO("Toast no internet")
+                emptyList()
+            }
+        }
     }
 }
