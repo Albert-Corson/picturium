@@ -6,4 +6,6 @@
     <color name="primaryAccent">#e94560</color>
     <color name="primaryAccentLight">#ffff7b91</color>
     <color name="translucent">#73FFFFFF</color>
+    <color name="primaryLightTransparent">#000f3460</color>
+    <color name="primaryDarker">#FF00001C</color>
 </resources>

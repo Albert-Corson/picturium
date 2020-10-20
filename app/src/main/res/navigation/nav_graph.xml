@@ -16,10 +16,22 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/slide_out_left" />
+        <action
+                android:id="@+id/action_homeFragment_to_galleryDetailsFragment"
+                app:destination="@id/galleryDetailsFragment"/>
     </fragment>
     <fragment
         android:id="@+id/profilePageFragment"
         android:name="com.example.picturium.fragments.ProfilePageFragment"
         android:label="fragment_profile_page"
         tools:layout="@layout/fragment_profile_page" />
+    <fragment
+            android:id="@+id/galleryDetailsFragment"
+            android:name="com.example.picturium.fragments.GalleryDetailsFragment"
+            android:label="fragment_gallery_details"
+            tools:layout="@layout/fragment_gallery_details">
+        <argument
+                android:name="submission"
+                app:argType="com.example.picturium.models.ThreadData"/>
+    </fragment>
 </navigation>

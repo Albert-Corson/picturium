@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_thread"
+        android:layout_margin="5dp">
+
+    <ImageView
+            android:id="@+id/row_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="imgur"
+            android:scaleType="fitCenter"
+            android:background="@color/cardview_dark_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/error"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gradient"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/row_img"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+                android:id="@+id/text_view_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#fff"
+                tools:text="titre"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primaryDarker"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/row_img"
+            tools:layout_editor_absoluteX="5dp">
+
+        <TextView
+                android:id="@+id/text_view_up_vote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:textColor="#fff"
+                app:drawableStartCompat="@drawable/ic_thumb_up"
+                tools:text="upVote"/>
+
+        <TextView
+                android:id="@+id/text_view_down_vote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:textColor="#fff"
+                app:drawableStartCompat="@drawable/ic_thumb_down"
+                tools:text="downVote"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
