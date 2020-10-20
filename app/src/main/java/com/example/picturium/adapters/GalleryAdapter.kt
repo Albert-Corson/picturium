@@ -52,12 +52,12 @@ class GalleryAdapter(private var mData: List<Submission>, private val listener: 
             }
         }
 
-        fun bind(thread: Submission) {
+        fun bind(submission: Submission) {
             var url: String? = null
-            if (thread.cover != null)
-                url = thread.images?.find { it.id == thread.cover }?.link
+            if (submission.cover != null)
+                url = submission.images?.find { it.id == submission.cover }?.link
             if (url == null)
-                url = thread.link
+                url = submission.link
             binding.apply {
                 Glide.with(itemView)
                     .load(url)
@@ -66,14 +66,14 @@ class GalleryAdapter(private var mData: List<Submission>, private val listener: 
                     .error(R.drawable.error)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(rowImg)
-                textViewTitle.text = thread.title
-                textViewUpVote.text = thread.ups.toString()
-                textViewDownVote.text = thread.downs.toString()
+                textViewTitle.text = submission.title
+                textViewUpVote.text = submission.ups.toString()
+                textViewDownVote.text = submission.downs.toString()
             }
         }
     }
 
     interface OnItemClickListener {
-        fun onItemClick(thread: Submission)
+        fun onItemClick(submission: Submission)
     }
 }

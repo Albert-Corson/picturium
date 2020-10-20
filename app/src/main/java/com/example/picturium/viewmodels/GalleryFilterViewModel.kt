@@ -10,7 +10,7 @@ class GalleryFilterViewModel : GalleryViewModel() {
 
     private val currentSection: MutableLiveData<String> = MutableLiveData("hot")
     private val currentOption = TripleLiveData(currentSection, currentSort, currentWindow)
-    val threads: LiveData<List<Submission>> = currentOption.switchMap { options ->
+    val submissions: LiveData<List<Submission>> = currentOption.switchMap { options ->
         val section = options.first ?: error("no section value")
         val sort = options.second ?: error("no sort value")
         val window = options.third ?: error("no window value")

@@ -56,6 +56,14 @@ interface ImgurAPI {
         @Query("album_previews") albumPreview: Boolean
     ): Response<GalleryResponse>
 
+    @GET("3/gallery/search/{sort}/{window}/{page}")
+    suspend fun getSearchGallery(
+        @Path("sort") sort: String,
+        @Path("window") window: String,
+        @Path("page") page: Int,
+        @Query("q") query: String
+    ): Response<GalleryResponse>
+
     @GET("oauth2/secret")
     suspend fun checkAccessToken(): Response<Void>
 

@@ -17,8 +17,11 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/slide_out_left" />
         <action
-                android:id="@+id/action_homeFragment_to_galleryDetailsFragment"
-                app:destination="@id/galleryDetailsFragment"/>
+                android:id="@+id/action_homeFragment_to_detailsPageFragment"
+                app:destination="@id/detailsPageFragment"/>
+        <action
+                android:id="@+id/action_homeFragment_to_searchPageFragment"
+                app:destination="@id/searchPageFragment"/>
     </fragment>
     <fragment
         android:id="@+id/profilePageFragment"
@@ -26,12 +29,24 @@
         android:label="fragment_profile_page"
         tools:layout="@layout/fragment_profile_page" />
     <fragment
-            android:id="@+id/galleryDetailsFragment"
-            android:name="com.example.picturium.fragments.GalleryDetailsFragment"
-            android:label="fragment_gallery_details"
-            tools:layout="@layout/fragment_gallery_details">
+            android:id="@+id/detailsPageFragment"
+            android:name="com.example.picturium.fragments.DetailsPageFragment"
+            android:label="fragment_details_page"
+            tools:layout="@layout/fragment_details_page">
         <argument
                 android:name="submission"
                 app:argType="com.example.picturium.models.Submission"/>
+    </fragment>
+    <fragment
+            android:id="@+id/searchPageFragment"
+            android:name="com.example.picturium.fragments.SearchPageFragment"
+            android:label="fragment_search_page"
+            tools:layout="@layout/fragment_search_page">
+        <argument
+                android:name="query"
+                app:argType="string"/>
+        <action
+                android:id="@+id/action_searchPageFragment_to_detailsPageFragment"
+                app:destination="@id/detailsPageFragment"/>
     </fragment>
 </navigation>

@@ -15,7 +15,7 @@ open class GalleryViewModel(): ViewModel() {
     }
 
     fun setWindow(window: String) {
-        currentSort.value = window
+        currentWindow.value = window
     }
 
     inner class TripleLiveData<A, B, C>(
