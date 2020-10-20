@@ -23,14 +23,5 @@ data class Submission(
     val ups: Int,
     val downs: Int,
     val score: Int,
-    val images: List<Image>?,
-) : Parcelable {
-
-    @Parcelize
-    data class Image(
-        val id: String,
-        val title: String?,
-        val description: String?,
-        val link: String
-    ) : Parcelable
-}
+    val images: List<MediaResource>?,
+) : Parcelable

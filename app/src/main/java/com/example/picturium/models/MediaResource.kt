@@ -1,7 +1,10 @@
 package com.example.picturium.models
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class MediaResource(
     @SerializedName("id")
     val id: String,
@@ -46,11 +49,11 @@ data class MediaResource(
     val deleteHash: String,
 
     @SerializedName("link")
-    val imageLink: String?,
+    val link: String?,
 
     @SerializedName("mp4")
     val videoLink: String?,
 
     @SerializedName("gifv")
     val gifLink: String?
-)
+) : Parcelable

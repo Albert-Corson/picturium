@@ -58,7 +58,7 @@ class ProfileGalleryAdapter(private var _gallery: List<Submission>) : RecyclerVi
             when (res) {
                 is ImgurAPI.CallResult.NetworkError -> null
                 is ImgurAPI.CallResult.ErrorResponse -> null
-                is ImgurAPI.CallResult.SuccessResponse -> res.body.data.imageLink
+                is ImgurAPI.CallResult.SuccessResponse -> res.body.data.link
             }
         }
     }
