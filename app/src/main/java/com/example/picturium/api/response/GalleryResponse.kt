@@ -1,7 +1,7 @@
 package com.example.picturium.api.response
 
-import com.example.picturium.models.ThreadData
+import com.example.picturium.models.Submission
 
 data class GalleryResponse(
-    val data: List<ThreadData>
+    val data: List<Submission>
 )

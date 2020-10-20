@@ -9,12 +9,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.picturium.R
 import com.example.picturium.databinding.ItemThreadBinding
-import com.example.picturium.models.ThreadData
+import com.example.picturium.models.Submission
 import kotlinx.android.synthetic.main.item_thread.view.*
 
-class GalleryAdapter(private var mData: List<ThreadData>, private val listener: OnItemClickListener) : RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
+class GalleryAdapter(private var mData: List<Submission>, private val listener: OnItemClickListener) : RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
 
-    fun setData(list: List<ThreadData>) {
+    fun setData(list: List<Submission>) {
         mData = list
         notifyDataSetChanged()
     }
@@ -28,10 +28,12 @@ class GalleryAdapter(private var mData: List<ThreadData>, private val listener: 
 
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
         val currentThread = mData[position]
+        val width = currentThread.coverWidth ?: currentThread.width
+        val height = currentThread.coverHeight ?: currentThread.height
 
-        if (currentThread.cover_width != null && currentThread.cover_height != null) {
-            val ratio: Float = holder.itemView.width / currentThread.cover_width.toFloat()
-            holder.itemView.row_img.layoutParams.height = (currentThread.cover_height.toFloat() * ratio).toInt()
+        if (width != null && height != null) {
+            val ratio: Float = holder.itemView.width / width.toFloat()
+            holder.itemView.row_img.layoutParams.height = (height.toFloat() * ratio).toInt()
         }
         holder.bind(currentThread)
     }
@@ -50,7 +52,7 @@ class GalleryAdapter(private var mData: List<ThreadData>, private val listener: 
             }
         }
 
-        fun bind(thread: ThreadData) {
+        fun bind(thread: Submission) {
             var url: String? = null
             if (thread.cover != null)
                 url = thread.images?.find { it.id == thread.cover }?.link
@@ -72,6 +74,6 @@ class GalleryAdapter(private var mData: List<ThreadData>, private val listener: 
     }
 
     interface OnItemClickListener {
-        fun onItemClick(thread: ThreadData)
+        fun onItemClick(thread: Submission)
     }
 }

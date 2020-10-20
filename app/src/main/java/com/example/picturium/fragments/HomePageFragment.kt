@@ -13,7 +13,7 @@ import com.example.picturium.R
 import com.example.picturium.SearchBarQueryListener
 import com.example.picturium.User
 import com.example.picturium.adapters.GalleryAdapter
-import com.example.picturium.models.ThreadData
+import com.example.picturium.models.Submission
 import com.example.picturium.viewmodels.GalleryFilterViewModel
 import kotlinx.android.synthetic.main.fragment_home_page.*
 import kotlinx.coroutines.Dispatchers
@@ -57,7 +57,7 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
         _setProfileBtnImage()
     }
 
-    override fun onItemClick(thread: ThreadData) {
+    override fun onItemClick(thread: Submission) {
         val action = HomePageFragmentDirections.actionHomeFragmentToGalleryDetailsFragment(thread)
 
         findNavController().navigate(action)

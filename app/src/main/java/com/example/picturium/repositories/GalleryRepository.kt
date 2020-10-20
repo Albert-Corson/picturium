@@ -1,12 +1,11 @@
 package com.example.picturium.repositories
 
-import androidx.lifecycle.LiveData
 import com.example.picturium.api.ImgurAPI
-import com.example.picturium.models.ThreadData
+import com.example.picturium.models.Submission
 
 class GalleryRepository {
 
-    suspend fun getGallery(section: String, sort: String, window: String): List<ThreadData> {
+    suspend fun getGallery(section: String, sort: String, window: String): List<Submission> {
 
         val response = ImgurAPI.instance
             .getGallery(section, sort, window, 1, false, false, false)

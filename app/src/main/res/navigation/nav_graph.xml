@@ -32,6 +32,6 @@
             tools:layout="@layout/fragment_gallery_details">
         <argument
                 android:name="submission"
-                app:argType="com.example.picturium.models.ThreadData"/>
+                app:argType="com.example.picturium.models.Submission"/>
     </fragment>
 </navigation>

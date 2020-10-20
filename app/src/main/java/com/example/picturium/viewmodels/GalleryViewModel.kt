@@ -1,7 +1,6 @@
 package com.example.picturium.viewmodels
 
 import androidx.lifecycle.*
-import com.example.picturium.models.ThreadData
 import com.example.picturium.repositories.GalleryRepository
 
 open class GalleryViewModel(): ViewModel() {
