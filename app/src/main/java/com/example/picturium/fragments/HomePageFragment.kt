@@ -48,7 +48,6 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
                 _setProfileBtnImage()
             }
         }
-
     }
 
     override fun onResume() {
