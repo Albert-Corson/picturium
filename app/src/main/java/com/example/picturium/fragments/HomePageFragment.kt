@@ -21,7 +21,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.OnItemClickListener {
+class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.OnItemClickListener, SearchBarQueryListener.OnTextSubmitListener {
     private lateinit var _filterBtnManager: FilterButtonsManager
     private val viewModel by viewModels<GalleryFilterViewModel>()
 
@@ -29,19 +29,18 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
         super.onViewCreated(view, savedInstanceState)
         _filterBtnManager = FilterButtonsManager(this.requireActivity())
 
-        topBar_svSearchBar.setOnQueryTextListener(SearchBarQueryListener(topBar_svSearchBar))
+        topBar_svSearchBar.setOnQueryTextListener(SearchBarQueryListener(topBar_svSearchBar, this))
         topBar_ibProfile.setOnClickListener { profileBtnOnClick() }
         topBar_ibUpload.setOnClickListener { uploadBtnOnClick() }
 
         gallery_recyclerView.adapter = GalleryAdapter(emptyList(), this)
         gallery_recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
-        viewModel.threads.observe(viewLifecycleOwner, {
+        viewModel.submissions.observe(viewLifecycleOwner, {
             val adapter = gallery_recyclerView.adapter as GalleryAdapter
 
             adapter.setData(it)
         })
-
 
         GlobalScope.launch(Dispatchers.IO) {
             User.init(this@HomePageFragment.requireActivity().applicationContext)
@@ -57,9 +56,16 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
         _setProfileBtnImage()
     }
 
-    override fun onItemClick(thread: Submission) {
-        val action = HomePageFragmentDirections.actionHomeFragmentToGalleryDetailsFragment(thread)
+    override fun onItemClick(submission: Submission) {
+        val action = HomePageFragmentDirections.actionHomeFragmentToDetailsPageFragment(submission)
 
+        findNavController().navigate(action)
+    }
+
+    override fun onTextSubmit(query: String) {
+        val action = HomePageFragmentDirections.actionHomeFragmentToSearchPageFragment(query)
+
+        topBar_svSearchBar.setQuery("", false)
         findNavController().navigate(action)
     }
 
@@ -71,13 +77,13 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
             .into(topBar_ibProfile)
     }
 
-    fun profileBtnOnClick() {
+    private fun profileBtnOnClick() {
         val action = HomePageFragmentDirections.actionHomeFragmentToProfilePageFragment()
 
         findNavController().navigate(action)
     }
 
-    fun uploadBtnOnClick() {
+    private fun uploadBtnOnClick() {
         Toast.makeText(this.context, "Upload", Toast.LENGTH_LONG).show()
     }
 }

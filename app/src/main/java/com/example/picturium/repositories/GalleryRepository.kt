@@ -15,4 +15,16 @@ class GalleryRepository {
         }
         return emptyList()
     }
+
+    suspend fun getSearchGallery(sort: String, window: String, query: String): List<Submission> {
+
+        val response = ImgurAPI.instance
+            .getSearchGallery(sort, window, 1, query)
+
+        println(response)
+        if (response.isSuccessful) {
+            return response.body()!!.data
+        }
+        return emptyList()
+    }
 }
