@@ -3,22 +3,18 @@ package com.example.picturium.adapters
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.ColorInt
-import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.picturium.R
 import com.example.picturium.databinding.ItemThreadBinding
 import com.example.picturium.models.ThreadData
+import kotlinx.android.synthetic.main.item_thread.view.*
 
 class GalleryAdapter(private var mData: List<ThreadData>, private val listener: OnItemClickListener) : RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
 
-    private var parentWidth: Int = 0
-
-    fun setData(list : List<ThreadData>) {
+    fun setData(list: List<ThreadData>) {
         mData = list
         notifyDataSetChanged()
     }
@@ -27,14 +23,16 @@ class GalleryAdapter(private var mData: List<ThreadData>, private val listener: 
         val binding: ItemThreadBinding = ItemThreadBinding
             .inflate(LayoutInflater.from(parent.context), parent, false)
 
-        parentWidth = parent.width / 2
-
         return GalleryViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
         val currentThread = mData[position]
 
+        if (currentThread.cover_width != null && currentThread.cover_height != null) {
+            val ratio: Float = holder.itemView.width / currentThread.cover_width.toFloat()
+            holder.itemView.row_img.layoutParams.height = (currentThread.cover_height.toFloat() * ratio).toInt()
+        }
         holder.bind(currentThread)
     }
 
@@ -72,6 +70,7 @@ class GalleryAdapter(private var mData: List<ThreadData>, private val listener: 
             }
         }
     }
+
     interface OnItemClickListener {
         fun onItemClick(thread: ThreadData)
     }
