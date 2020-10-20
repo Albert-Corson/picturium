@@ -4,27 +4,30 @@ import androidx.lifecycle.*
 import com.example.picturium.models.ThreadData
 import com.example.picturium.repositories.GalleryRepository
 
-class GalleryViewModel(): ViewModel() {
+open class GalleryViewModel(): ViewModel() {
 
-    private val currentOption = MutableLiveData(mutableMapOf("section" to "hot", "sort" to "viral", "window" to "day"))
-    private var mRepo: GalleryRepository = GalleryRepository()
+    protected val currentSort : MutableLiveData<String> = MutableLiveData("viral")
+    protected val currentWindow : MutableLiveData<String> = MutableLiveData("day")
+    protected var mRepo: GalleryRepository = GalleryRepository()
 
-    val threads: LiveData<List<ThreadData>> = currentOption.switchMap { options ->
-        val section = options["section"] ?: error("no section key")
-        val sort = options["sort"] ?: error("no sort key")
-        val window = options["window"] ?: error("no window key")
 
-        liveData {
-            emit(mRepo.getGallery(section, sort, window))
-        }
+    fun setSort(sort: String) {
+        currentSort.value = sort
     }
 
-    fun changeOption(section: String, sort: String, window: String) {
-        val tmp = currentOption.value!!
+    fun setWindow(window: String) {
+        currentSort.value = window
+    }
 
-        tmp["section"] = section
-        tmp["sort"] = sort
-        tmp["window"] = window
-        currentOption.value = tmp
+    inner class TripleLiveData<A, B, C>(
+        first: LiveData<A>,
+        second: LiveData<B>,
+        third: LiveData<C>
+    ): MediatorLiveData<Triple<A?, B?, C?>>() {
+        init {
+            this.addSource(first) { value = Triple(it, second.value, third.value) }
+            this.addSource(second) { value = Triple(first.value, it, third.value) }
+            this.addSource(third) { value = Triple(first.value, second.value, it) }
+        }
     }
 }
