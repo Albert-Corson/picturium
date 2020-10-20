@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.picturium.R
 import com.example.picturium.User
-import com.example.picturium.adapter.ProfileGalleryAdapter
-import com.example.picturium.adapter.ViewPagerAdapter
+import com.example.picturium.adapters.ProfileGalleryAdapter
+import com.example.picturium.adapters.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_profile_page.*
 import kotlinx.coroutines.Dispatchers

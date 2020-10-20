@@ -1,4 +1,4 @@
-package com.example.picturium.adapter
+package com.example.picturium.adapters
 
 import android.view.LayoutInflater
 import android.view.View
