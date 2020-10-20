@@ -6,57 +6,109 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.picturium.R
 import com.example.picturium.User
 import com.example.picturium.adapter.ProfileGalleryAdapter
+import com.example.picturium.adapter.ViewPagerAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_profile_page.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProfilePageFragment : Fragment(R.layout.fragment_profile_page) {
-    private lateinit var _galleryAdapter: ProfileGalleryAdapter
+    private lateinit var _favoritesAdapter: ProfileGalleryAdapter
+    private lateinit var _submissionsAdapter: ProfileGalleryAdapter
+    private lateinit var _viewPagerAdapter: ViewPagerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        TO_REMOVE.setOnClickListener { loginBtnOnClick() }
+        profile_btnLogin.setOnClickListener { _loginBtnOnClick() }
+        profile_ibLogout.setOnClickListener { _logoutBtnOnClick() }
+        profile_ibClose.setOnClickListener { _closeBtnOnClick() }
 
-        _galleryAdapter = ProfileGalleryAdapter(emptyList())
-        profileGallery_rvGallery.adapter = _galleryAdapter
-        profileGallery_rvGallery.layoutManager = GridLayoutManager(context, 3)
+        _favoritesAdapter = ProfileGalleryAdapter(emptyList())
+        _submissionsAdapter = ProfileGalleryAdapter(emptyList())
+        _initTabbedLayoutViewPager()
+    }
+
+    private fun _initTabbedLayoutViewPager() {
+        _viewPagerAdapter = ViewPagerAdapter(listOf(
+            Pair(_favoritesAdapter, GridLayoutManager(context, 3)),
+            Pair(_submissionsAdapter, GridLayoutManager(context, 3))
+        ))
+
+        profile_vpGalleries.adapter = _viewPagerAdapter
+
+        TabLayoutMediator(profile_tbGalleries, profile_vpGalleries) { tab, position ->
+            when (position) {
+                0 -> tab.setIcon(R.drawable.ic_favorite)
+                1 -> tab.setIcon(R.drawable.ic_gallery)
+            }
+        }.attach()
     }
 
     override fun onResume() {
         super.onResume()
-        val loginJob = GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             User.handleLoginCallback(requireActivity().intent.data)
-        }
-        lifecycleScope.launch {
-            loginJob.join()
-            if (!User.isLoggedIn())
-                cancel()
-
-            lifecycleScope.launch(Dispatchers.IO) {
-                if (User.publicData?.favorites == null)
-                    User.loadFavorites()
+            if (User.isLoggedIn()) {
+                _refreshFavorites()
+                _refreshSubmissions()
                 withContext(Dispatchers.Main) {
-                    _galleryAdapter.setGallery(User.publicData?.favorites ?: emptyList())
+                    Glide.with(requireContext())
+                        .load(User.publicData?.profilePicture)
+                        .fallback(R.drawable.ic_dflt_profile)
+                        .circleCrop()
+                        .into(profile_ivProfilePicture)
+                    profile_ibLogout.visibility = View.VISIBLE
+                    profile_btnLogin.visibility = View.GONE
+                    profile_tvUsername.text = User.publicData?.username
                 }
-            }
-
-            withContext(Dispatchers.Main) {
-                Glide.with(this@ProfilePageFragment)
-                    .load(User.publicData?.profilePicture)
-                    .fallback(R.drawable.ic_dflt_profile)
-                    .circleCrop()
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(activityProfile_ivProfilePicture)
+            } else {
+                profile_ibLogout.visibility = View.GONE
+                profile_btnLogin.visibility = View.VISIBLE
             }
         }
     }
 
-    fun loginBtnOnClick() {
+    private fun _closeBtnOnClick() {
+        requireActivity().onBackPressed();
+    }
+
+    private fun _loginBtnOnClick() {
         if (!User.isLoggedIn())
             User.redirectToLogin(requireContext())
+    }
+
+    private fun _logoutBtnOnClick() {
+        if (!User.isLoggedIn())
+            return
+        User.logout()
+        profile_ivProfilePicture.setImageResource(R.drawable.ic_dflt_profile)
+        _favoritesAdapter.setGallery(emptyList())
+        _submissionsAdapter.setGallery(emptyList())
+        profile_ibLogout.visibility = View.GONE
+        profile_btnLogin.visibility = View.VISIBLE
+        profile_tvUsername.text = ""
+    }
+
+    private fun _refreshFavorites() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            User.loadFavorites()
+            withContext(Dispatchers.Main) {
+                _favoritesAdapter.setGallery(User.publicData?.favorites ?: emptyList())
+            }
+        }
+    }
+
+    private fun _refreshSubmissions() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            User.loadSubmissions()
+            withContext(Dispatchers.Main) {
+                _submissionsAdapter.setGallery(User.publicData?.submissions ?: emptyList())
+            }
+        }
     }
 }

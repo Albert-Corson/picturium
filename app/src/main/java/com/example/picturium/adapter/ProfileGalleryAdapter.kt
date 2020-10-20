@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.picturium.R
 import com.example.picturium.api.ImgurAPI
 import com.example.picturium.models.Submission
@@ -37,7 +38,8 @@ class ProfileGalleryAdapter(private var _gallery: List<Submission>) : RecyclerVi
             withContext(Dispatchers.Main) {
                 Glide.with(holder.itemView)
                     .load(link)
-                    .into(holder.itemView.profileGallery_ivImage)
+                    .transition(DrawableTransitionOptions.withCrossFade(1000))
+                    .into(holder.itemView.profile_ivGalleryImage)
             }
         }
     }

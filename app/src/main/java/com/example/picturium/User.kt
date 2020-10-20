@@ -7,6 +7,7 @@ import android.net.Uri
 import com.example.picturium.api.ImgurAPI
 import com.example.picturium.models.UserData
 import com.google.gson.Gson
+import retrofit2.Response
 
 object User {
     private lateinit var _context: Context
@@ -19,8 +20,7 @@ object User {
         _context = context
         _cache = _context.getSharedPreferences("userCache", Context.MODE_PRIVATE)
 
-        _loadFromCache()
-        if (!isLoggedIn())
+        if (!_loadFromCache())
             return
 
         val tokenCheck = ImgurAPI.safeCall {
@@ -34,11 +34,7 @@ object User {
             return
         }
 
-        if (_loadPublicData()) {
-            _save()
-        } else {
-            logout()
-        }
+        _loadPublicData()
     }
 
     private suspend fun _refreshAccessToken(): Boolean {
@@ -57,24 +53,23 @@ object User {
     }
 
     private suspend fun _login(credentialsUri: Uri) {
-        val username: String? = credentialsUri.getQueryParameter("account_username")
         accessToken = credentialsUri.getQueryParameter("access_token")
         refreshToken = credentialsUri.getQueryParameter("refresh_token")
-        if (username.isNullOrEmpty() || accessToken.isNullOrEmpty() || refreshToken.isNullOrEmpty()) {
+        if (accessToken.isNullOrEmpty() || refreshToken.isNullOrEmpty()) {
             logout()
             return
         }
         _loadPublicData()
     }
 
-    private fun _loadFromCache() {
-        if (!_cache.contains("publicData")) {
+    private fun _loadFromCache(): Boolean {
+        if (!_cache.contains("accessToken")) {
             logout()
-            return
+            return false
         }
-        publicData = Gson().fromJson(_cache.getString("publicData", ""), UserData::class.java)
         accessToken = _cache.getString("accessToken", null)
         refreshToken = _cache.getString("refreshToken", null)
+        return true
     }
 
     private suspend fun _loadPublicData(): Boolean {
@@ -99,8 +94,9 @@ object User {
     }
 
     suspend fun handleLoginCallback(uri: Uri?) {
+        if (isLoggedIn())
+            return
         val params = uri?.encodedFragment
-
         if (params == null || !uri.toString().startsWith(BuildConfig.CALLBACK_URL))
             return
         val parsed: Uri = Uri.parse("_://?$params")
@@ -117,14 +113,13 @@ object User {
     private fun _save() {
         val editor: SharedPreferences.Editor = _cache.edit()
 
-        editor.putString("publicData", Gson().toJson(publicData).toString())
         editor.putString("accessToken", accessToken)
         editor.putString("refreshToken", refreshToken)
         editor.apply()
     }
 
     fun isLoggedIn(): Boolean {
-        return publicData != null
+        return accessToken != null
     }
 
     suspend fun loadSubmissions(): Boolean {
