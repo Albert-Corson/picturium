@@ -28,12 +28,11 @@ object User {
         }
 
         if (tokenCheck is ImgurAPI.CallResult.NetworkError) {
-            TODO("Toast no internet")
+            Picturium.toastConnectionError()
             return
         } else if (tokenCheck is ImgurAPI.CallResult.ErrorResponse && !_refreshAccessToken()) {
             return
         }
-
         _loadPublicData()
     }
 
@@ -42,7 +41,7 @@ object User {
             ImgurAPI.instance.refreshAccessToken()
         }
         when (tokenRefresh) {
-            is ImgurAPI.CallResult.NetworkError -> TODO("Toast no internet")
+            is ImgurAPI.CallResult.NetworkError -> Picturium.toastConnectionError()
             is ImgurAPI.CallResult.ErrorResponse -> logout()
             is ImgurAPI.CallResult.SuccessResponse -> {
                 accessToken = tokenRefresh.body.data.accessToken
@@ -77,7 +76,7 @@ object User {
             ImgurAPI.instance.getUserData()
         }
         when (res) {
-            is ImgurAPI.CallResult.NetworkError -> TODO("Toast no internet")
+            is ImgurAPI.CallResult.NetworkError -> Picturium.toastConnectionError()
             is ImgurAPI.CallResult.ErrorResponse -> logout()
             is ImgurAPI.CallResult.SuccessResponse -> {
                 publicData = res.body.data
@@ -129,7 +128,7 @@ object User {
             ImgurAPI.instance.getSubmissionsFrom()
         }
         when (res) {
-            is ImgurAPI.CallResult.NetworkError -> TODO("Toast no internet")
+            is ImgurAPI.CallResult.NetworkError -> Picturium.toastConnectionError()
             is ImgurAPI.CallResult.ErrorResponse -> logout()
             is ImgurAPI.CallResult.SuccessResponse -> {
                 publicData!!.submissions = res.body.data
@@ -146,7 +145,7 @@ object User {
             ImgurAPI.instance.getFavoritesFrom()
         }
         when (res) {
-            is ImgurAPI.CallResult.NetworkError -> TODO("Toast no internet")
+            is ImgurAPI.CallResult.NetworkError -> Picturium.toastConnectionError()
             is ImgurAPI.CallResult.ErrorResponse -> logout()
             is ImgurAPI.CallResult.SuccessResponse -> {
                 publicData!!.favorites = res.body.data

@@ -1,5 +1,6 @@
 package com.example.picturium.repositories
 
+import com.example.picturium.Picturium
 import com.example.picturium.api.ImgurAPI
 import com.example.picturium.models.Submission
 
@@ -14,7 +15,7 @@ class GalleryRepository {
             is ImgurAPI.CallResult.SuccessResponse -> res.body.data
             is ImgurAPI.CallResult.ErrorResponse -> emptyList()
             is ImgurAPI.CallResult.NetworkError -> {
-                TODO("Toast no internet")
+                Picturium.toastConnectionError()
                 emptyList()
             }
         }
@@ -29,7 +30,7 @@ class GalleryRepository {
             is ImgurAPI.CallResult.SuccessResponse -> res.body.data
             is ImgurAPI.CallResult.ErrorResponse -> emptyList()
             is ImgurAPI.CallResult.NetworkError -> {
-                TODO("Toast no internet")
+                Picturium.toastConnectionError()
                 emptyList()
             }
         }
