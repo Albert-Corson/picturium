@@ -22,4 +22,7 @@ data class UserData(
     val id: Int,
     val created: Int,
     val reputation: Int,
-)
+) {
+    var favorites: List<Submission>? = null
+    var submissions: List<Submission>? = null
+}
