@@ -7,15 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.picturium.R
-import com.example.picturium.api.ImgurAPI
 import com.example.picturium.models.Submission
 import kotlinx.android.synthetic.main.profile_image.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
-class ProfileGalleryAdapter(private var _gallery: List<Submission>) : RecyclerView.Adapter<ProfileGalleryAdapter.ViewHolder>() {
+class ProfileGalleryAdapter(private var _gallery: List<Submission>, private val _coroutineScope: CoroutineScope) :
+    RecyclerView.Adapter<ProfileGalleryAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -33,8 +30,9 @@ class ProfileGalleryAdapter(private var _gallery: List<Submission>) : RecyclerVi
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        GlobalScope.launch {
-            val link = _getCoverLink(_gallery[position])
+        _coroutineScope.launch(Dispatchers.IO) {
+            val link = _gallery[position].getCoverImage()?.link
+
             withContext(Dispatchers.Main) {
                 Glide.with(holder.itemView)
                     .load(link)
@@ -46,20 +44,5 @@ class ProfileGalleryAdapter(private var _gallery: List<Submission>) : RecyclerVi
 
     override fun getItemCount(): Int {
         return _gallery.size
-    }
-
-    private suspend fun _getCoverLink(submission: Submission): String? {
-        return if (submission.cover == null) {
-            null
-        } else {
-            val res = ImgurAPI.safeCall {
-                ImgurAPI.instance.getMediaResource(submission.cover)
-            }
-            when (res) {
-                is ImgurAPI.CallResult.NetworkError -> null
-                is ImgurAPI.CallResult.ErrorResponse -> null
-                is ImgurAPI.CallResult.SuccessResponse -> res.body.data.link
-            }
-        }
     }
 }

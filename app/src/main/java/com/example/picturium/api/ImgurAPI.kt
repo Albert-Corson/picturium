@@ -4,7 +4,7 @@ import com.example.picturium.BuildConfig
 import com.example.picturium.User
 import com.example.picturium.api.request.RefreshTokenRequest
 import com.example.picturium.api.response.GalleryResponse
-import com.example.picturium.api.response.MediaResourceResponse
+import com.example.picturium.api.response.ImageResponse
 import com.example.picturium.api.response.RefreshTokenResponse
 import com.example.picturium.api.response.UserDataResponse
 import com.google.gson.Gson
@@ -117,5 +117,5 @@ interface ImgurAPI {
     suspend fun getFavoritesFrom(@Path("userName") userName: String = "me"): GalleryResponse
 
     @GET("3/image/{imageId}")
-    suspend fun getMediaResource(@Path("imageId") imageId: String): MediaResourceResponse
+    suspend fun getImage(@Path("imageId") imageId: String): ImageResponse
 }

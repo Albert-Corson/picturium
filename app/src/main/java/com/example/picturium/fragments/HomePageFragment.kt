@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
@@ -29,7 +30,7 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
         home_ibProfile.setOnClickListener { profileBtnOnClick() }
         home_ibUpload.setOnClickListener { uploadBtnOnClick() }
 
-        gallery_recyclerView.adapter = GalleryAdapter(emptyList(), this)
+        gallery_recyclerView.adapter = GalleryAdapter(emptyList(), this, lifecycleScope)
         gallery_recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
         viewModel.submissions.observe(viewLifecycleOwner, {
