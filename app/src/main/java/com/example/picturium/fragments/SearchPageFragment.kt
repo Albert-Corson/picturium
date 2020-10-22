@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -32,7 +33,7 @@ class SearchPageFragment : Fragment(R.layout.fragment_search_page), GalleryAdapt
         topBar_svSearchBarInSearch.setQuery(args.query, false)
 
         _setNoResultImage()
-        search_rvGallery.adapter = GalleryAdapter(emptyList(), this)
+        search_rvGallery.adapter = GalleryAdapter(emptyList(), this, lifecycleScope)
         search_rvGallery.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
         viewModel.submissions.observe(viewLifecycleOwner, {

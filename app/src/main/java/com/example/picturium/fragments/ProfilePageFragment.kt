@@ -28,16 +28,18 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page) {
         profile_ibLogout.setOnClickListener { _logoutBtnOnClick() }
         profile_ibClose.setOnClickListener { _closeBtnOnClick() }
 
-        _favoritesAdapter = ProfileGalleryAdapter(emptyList())
-        _submissionsAdapter = ProfileGalleryAdapter(emptyList())
+        _favoritesAdapter = ProfileGalleryAdapter(emptyList(), lifecycleScope)
+        _submissionsAdapter = ProfileGalleryAdapter(emptyList(), lifecycleScope)
         _initTabbedLayoutViewPager()
     }
 
     private fun _initTabbedLayoutViewPager() {
-        _viewPagerAdapter = ViewPagerAdapter(listOf(
-            Pair(_favoritesAdapter, GridLayoutManager(context, 3)),
-            Pair(_submissionsAdapter, GridLayoutManager(context, 3))
-        ))
+        _viewPagerAdapter = ViewPagerAdapter(
+            listOf(
+                Pair(_favoritesAdapter, GridLayoutManager(context, 3)),
+                Pair(_submissionsAdapter, GridLayoutManager(context, 3))
+            )
+        )
 
         profile_vpGalleries.adapter = _viewPagerAdapter
 
@@ -67,8 +69,10 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page) {
                     profile_tvUsername.text = User.publicData?.username
                 }
             } else {
-                profile_ibLogout.visibility = View.GONE
-                profile_btnLogin.visibility = View.VISIBLE
+                withContext(Dispatchers.Main) {
+                    profile_ibLogout.visibility = View.GONE
+                    profile_btnLogin.visibility = View.VISIBLE
+                }
             }
         }
     }

@@ -11,8 +11,16 @@ import com.example.picturium.R
 import com.example.picturium.databinding.ItemThreadBinding
 import com.example.picturium.models.Submission
 import kotlinx.android.synthetic.main.item_thread.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class GalleryAdapter(private var mData: List<Submission>, private val listener: OnItemClickListener) : RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
+class GalleryAdapter(
+    private var mData: List<Submission>,
+    private val listener: OnItemClickListener,
+    private val coroutineScope: CoroutineScope
+) : RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
 
     fun setData(list: List<Submission>) {
         mData = list
@@ -28,13 +36,11 @@ class GalleryAdapter(private var mData: List<Submission>, private val listener: 
 
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
         val currentThread = mData[position]
-        val width = currentThread.coverWidth ?: currentThread.width
-        val height = currentThread.coverHeight ?: currentThread.height
+        val width = currentThread.coverWidth
+        val height = currentThread.coverHeight
 
-        if (width != null && height != null) {
-            val ratio: Float = holder.itemView.width / width.toFloat()
-            holder.itemView.row_img.layoutParams.height = (height.toFloat() * ratio).toInt()
-        }
+        val ratio: Float = holder.itemView.width / width.toFloat()
+        holder.itemView.row_img.layoutParams.height = (height.toFloat() * ratio).toInt()
         holder.bind(currentThread)
     }
 
@@ -53,22 +59,22 @@ class GalleryAdapter(private var mData: List<Submission>, private val listener: 
         }
 
         fun bind(submission: Submission) {
-            var url: String? = null
-            if (submission.cover != null)
-                url = submission.images?.find { it.id == submission.cover }?.link
-            if (url == null)
-                url = submission.link
-            binding.apply {
-                Glide.with(itemView)
-                    .load(url)
-                    .placeholder(ColorDrawable(Color.BLACK))
-                    .fitCenter()
-                    .error(R.drawable.error)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(rowImg)
-                textViewTitle.text = submission.title
-                textViewUpVote.text = submission.ups.toString()
-                textViewDownVote.text = submission.downs.toString()
+            coroutineScope.launch(Dispatchers.IO) {
+                val url = submission.getCoverImage()?.link
+                binding.apply {
+                    withContext(Dispatchers.Main) {
+                        Glide.with(itemView)
+                            .load(url)
+                            .placeholder(ColorDrawable(Color.BLACK))
+                            .fitCenter()
+                            .error(R.drawable.error)
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .into(rowImg)
+                        textViewTitle.text = submission.title
+                        textViewUpVote.text = submission.upVotes.toString()
+                        textViewDownVote.text = submission.downVotes.toString()
+                    }
+                }
             }
         }
     }
