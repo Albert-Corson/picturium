@@ -34,16 +34,17 @@ data class Submission(
     @SerializedName("score")
     val score: Int?,
 
-    @SerializedName("width")
-    private val width: Int?,
-    @SerializedName("height")
-    private val height: Int?,
-    @SerializedName("animated")
-    private val animated: Boolean?,
-    @SerializedName("has_sound")
-    private val hasSound: Boolean?,
     @SerializedName("link")
-    private val link: String?,
+    private val _link: String?,
+
+    @SerializedName("width")
+    private val _width: Int?,
+    @SerializedName("height")
+    private val _height: Int?,
+    @SerializedName("animated")
+    private val _animated: Boolean?,
+    @SerializedName("has_sound")
+    private val _hasSound: Boolean?,
 
     @SerializedName("is_album")
     private val _isAlbum: Boolean?,
@@ -57,8 +58,8 @@ data class Submission(
     private var _images: List<Image>?
 ) : Parcelable {
     private val cover: String get() = _cover ?: id!!
-    val coverWidth: Int get() = _coverWidth ?: width!!
-    val coverHeight: Int get() = _coverHeight ?: height!!
+    val coverWidth: Int get() = _coverWidth ?: _width!!
+    val coverHeight: Int get() = _coverHeight ?: _height!!
     val images: List<Image>
         get() {
             if (_images == null && _cover == null) {
@@ -77,11 +78,11 @@ data class Submission(
                         downVotes = downVotes,
                         points = points,
                         score = score,
-                        width = width,
-                        height = height,
-                        animated = animated,
-                        hasSound = hasSound,
-                        link = link
+                        width = _width,
+                        height = _height,
+                        animated = _animated,
+                        hasSound = _hasSound,
+                        link = _link
                     )
                 )
             } else if (_images == null) {
