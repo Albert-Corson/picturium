@@ -19,7 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-//implement the button
 class DetailsPageFragment : Fragment(R.layout.fragment_details_page) {
 
     private val args: DetailsPageFragmentArgs by navArgs()

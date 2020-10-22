@@ -41,136 +41,16 @@
 
     </LinearLayout>
 
-    <RadioGroup
-            android:id="@+id/filterBar_rgMainFilterButtons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checkedButton="@id/filterBar_rbMainViral"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-        <RadioButton
-                android:id="@+id/filterBar_rbMainViral"
-                style="@style/AppTheme.FilterBar.MainFilterButton"
-                android:tag="viral"
-                android:text="@string/filter_button_viral"/>
-
-        <RadioButton
-                style="@style/AppTheme.FilterBar.MainFilterButton"
-                android:tag="top"
-                android:text="@string/filter_button_top"/>
-
-        <RadioButton
-                style="@style/AppTheme.FilterBar.MainFilterButton"
-                android:tag="user"
-                android:text="@string/filter_button_user"/>
-    </RadioGroup>
-
-    <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checkedButton="@id/filterBar_viral_rbPopular"
-            android:orientation="horizontal"
-            android:tag="viral"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filterBar_rgMainFilterButtons"
-            tools:visibility="visible"
-            android:id="@+id/radioGroup">
-
-        <RadioButton
-                android:id="@+id/filterBar_viral_rbPopular"
-                style="@style/AppTheme.FilterBar.SecondaryFilterButton"
-                android:text="@string/filter_button_viral_popular"/>
-
-        <RadioButton
-                style="@style/AppTheme.FilterBar.SecondaryFilterButton"
-                android:text="@string/filter_button_viral_newest"/>
-
-        <RadioButton
-                style="@style/AppTheme.FilterBar.SecondaryFilterButton"
-                android:text="@string/filter_button_viral_best"/>
-    </RadioGroup>
-
-    <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checkedButton="@id/filterBar_top_rbDay"
-            android:orientation="horizontal"
-            android:tag="top"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filterBar_rgMainFilterButtons"
-            tools:visibility="visible">
-
-        <RadioButton
-                android:id="@+id/filterBar_top_rbDay"
-                style="@style/AppTheme.FilterBar.SecondaryFilterButton"
-                android:tag="day"
-                android:text="@string/filter_button_top_day"/>
-
-        <RadioButton
-                style="@style/AppTheme.FilterBar.SecondaryFilterButton"
-                android:tag="weeks"
-                android:text="@string/filter_button_top_week"/>
-
-        <RadioButton
-                style="@style/AppTheme.FilterBar.SecondaryFilterButton"
-                android:tag="month"
-                android:text="@string/filter_button_top_month"/>
-
-        <RadioButton
-                style="@style/AppTheme.FilterBar.SecondaryFilterButton"
-                android:tag="year"
-                android:text="@string/filter_button_top_year"/>
-
-        <RadioButton
-                style="@style/AppTheme.FilterBar.SecondaryFilterButton"
-                android:tag="all"
-                android:text="@string/filter_button_top_all"/>
-    </RadioGroup>
-
-    <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checkedButton="@id/filterBar_user_rbPopular"
-            android:orientation="horizontal"
-            android:tag="user"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filterBar_rgMainFilterButtons"
-            tools:visibility="visible">
-
-        <RadioButton
-                android:id="@+id/filterBar_user_rbPopular"
-                style="@style/AppTheme.FilterBar.SecondaryFilterButton"
-                android:text="@string/filter_button_user_popular"/>
-
-        <RadioButton
-                style="@style/AppTheme.FilterBar.SecondaryFilterButton"
-                android:text="@string/filter_button_user_newest"/>
-
-        <RadioButton
-                style="@style/AppTheme.FilterBar.SecondaryFilterButton"
-                android:text="@string/filter_button_user_rising"/>
-    </RadioGroup>
-
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_rvGallery"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             tools:listitem="@layout/item_thread"
-            app:layout_constraintTop_toBottomOf="@+id/radioGroup"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintVertical_bias="1.0"/>
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"/>
 
     <ProgressBar
             style="?android:attr/progressBarStyle"
