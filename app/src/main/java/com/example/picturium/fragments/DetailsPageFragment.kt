@@ -19,7 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-//implement the button
 class DetailsPageFragment : Fragment(R.layout.fragment_details_page) {
 
     private val args: DetailsPageFragmentArgs by navArgs()
@@ -27,7 +26,7 @@ class DetailsPageFragment : Fragment(R.layout.fragment_details_page) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        topBar_returnBtn.setOnClickListener { returnBtnOnClick() }
+        search_btnReturn.setOnClickListener { returnBtnOnClick() }
 
         lifecycleScope.launch {
             val url: String? = args.submission.getCoverImage()?.link

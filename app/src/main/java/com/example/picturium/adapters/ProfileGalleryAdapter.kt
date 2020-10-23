@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.picturium.R
 import com.example.picturium.models.Submission
-import kotlinx.android.synthetic.main.profile_image.view.*
+import kotlinx.android.synthetic.main.profile_page_image_item.view.*
 import kotlinx.coroutines.*
 
 class ProfileGalleryAdapter(private var _gallery: List<Submission>, private val _coroutineScope: CoroutineScope) :
@@ -22,7 +22,7 @@ class ProfileGalleryAdapter(private var _gallery: List<Submission>, private val 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.profile_image, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.profile_page_image_item, parent, false)
         val params = view.layoutParams
         params.height = (parent.measuredWidth.toFloat() / 3f).toInt()
         view.layoutParams = params

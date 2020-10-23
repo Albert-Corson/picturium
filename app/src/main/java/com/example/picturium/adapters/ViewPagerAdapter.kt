@@ -11,7 +11,7 @@ class ViewPagerAdapter(val galleries: List<Pair<ProfileGalleryAdapter, GridLayou
     inner class ViewHolder(recyclerView: View) : RecyclerView.ViewHolder(recyclerView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.recylcer_view, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.profile_page_recylcer_view, parent, false)
         return ViewHolder(view)
     }
 
