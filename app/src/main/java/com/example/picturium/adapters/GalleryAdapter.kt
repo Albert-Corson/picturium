@@ -4,6 +4,8 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -16,16 +18,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class GalleryAdapter(
-    private var mData: List<Submission>,
-    private val listener: OnItemClickListener,
-    private val coroutineScope: CoroutineScope
-) : RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
-
-    fun setData(list: List<Submission>) {
-        mData = list
-        notifyDataSetChanged()
-    }
+class GalleryAdapter(private val listener: OnItemClickListener) :
+    PagingDataAdapter<Submission, GalleryAdapter.GalleryViewHolder>(PHOTO_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
         val binding: ItemThreadBinding = ItemThreadBinding
@@ -35,26 +29,25 @@ class GalleryAdapter(
     }
 
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
-        val currentThread = mData[position]
-        val width = currentThread.coverWidth
-        val height = currentThread.coverHeight
+        getItem(position)?.let { currentSubmission ->
+            val width = currentSubmission.coverWidth
+            val height = currentSubmission.coverHeight
 
-        val ratio: Float = holder.itemView.width / width.toFloat()
-        holder.itemView.row_img.layoutParams.height = (height.toFloat() * ratio).toInt()
-        holder.bind(currentThread)
-    }
-
-    override fun getItemCount(): Int {
-        return mData.size
+            if (width != null && height != null) {
+                val ratio: Float = holder.itemView.width / width.toFloat()
+                holder.itemView.row_img.layoutParams.height = (height.toFloat() * ratio).toInt()
+            }
+            holder.bind(currentSubmission)
+        }
     }
 
     inner class GalleryViewHolder(private val binding: ItemThreadBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
-                val position = this.adapterPosition
+                val position = this.bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION)
-                    listener.onItemClick(mData[position])
+                    getItem(position)?.let { it1 -> listener.onItemClick(it1) }
             }
         }
 
@@ -81,5 +74,17 @@ class GalleryAdapter(
 
     interface OnItemClickListener {
         fun onItemClick(submission: Submission)
+    }
+
+    companion object {
+        private val PHOTO_COMPARATOR = object : DiffUtil.ItemCallback<Submission>() {
+            override fun areItemsTheSame(oldItem: Submission, newItem: Submission): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Submission, newItem: Submission): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 }

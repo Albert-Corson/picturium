@@ -25,6 +25,7 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val adapter = GalleryAdapter(this)
 
         home_svSearchBar.setOnQueryTextListener(SearchBarQueryListener(home_svSearchBar, this))
         home_ibProfile.setOnClickListener { _profileBtnOnClick() }
@@ -36,13 +37,11 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
             it.setOnCheckedChangeListener { _, isChecked -> _filtersOnCheckedChange(it, isChecked) }
         }
 
-        gallery_recyclerView.adapter = GalleryAdapter(emptyList(), this, lifecycleScope)
+        gallery_recyclerView.adapter = adapter
         gallery_recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
         viewModel.submissions.observe(viewLifecycleOwner, {
-            val adapter = gallery_recyclerView.adapter as GalleryAdapter
-
-            adapter.setData(it)
+            adapter.submitData(viewLifecycleOwner.lifecycle, it)
         })
     }
 

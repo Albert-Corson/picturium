@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.paging.map
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.picturium.R
@@ -25,6 +26,7 @@ class SearchPageFragment : Fragment(R.layout.fragment_search_page), GalleryAdapt
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val adapter = GalleryAdapter(this)
 
         viewModel.setQuery(args.query)
         viewModel.setWindow("all")
@@ -40,16 +42,14 @@ class SearchPageFragment : Fragment(R.layout.fragment_search_page), GalleryAdapt
         }
 
         _setNoResultImage()
-        search_rvGallery.adapter = GalleryAdapter(emptyList(), this, lifecycleScope)
+        search_rvGallery.adapter = adapter
         search_rvGallery.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
         viewModel.submissions.observe(viewLifecycleOwner, {
-            val adapter = search_rvGallery.adapter as GalleryAdapter
-
             search_progressBar.visibility = View.GONE
             search_rvGallery.visibility = View.VISIBLE
-            search_ivNoResult.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
-            adapter.setData(it)
+            //search_ivNoResult.visibility = if(it.isEmpty()) View.VISIBLE else View.GONE
+            adapter.submitData(viewLifecycleOwner.lifecycle, it)
         })
     }
 
