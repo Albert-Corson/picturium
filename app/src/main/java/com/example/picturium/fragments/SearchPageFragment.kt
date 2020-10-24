@@ -2,6 +2,8 @@ package com.example.picturium.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.widget.RadioButton
+import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -17,11 +19,10 @@ import com.example.picturium.models.Submission
 import com.example.picturium.viewmodels.GallerySearchViewModel
 import kotlinx.android.synthetic.main.fragment_search_page.*
 
-
-//add sort,
-class SearchPageFragment : Fragment(R.layout.fragment_search_page), GalleryAdapter.OnItemClickListener, SearchBarQueryListener.OnTextSubmitListener {
+class SearchPageFragment : Fragment(R.layout.fragment_search_page), GalleryAdapter.OnItemClickListener,
+    SearchBarQueryListener.OnTextSubmitListener {
     private val viewModel by viewModels<GallerySearchViewModel>()
-    private val args : SearchPageFragmentArgs by navArgs()
+    private val args: SearchPageFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,9 +31,15 @@ class SearchPageFragment : Fragment(R.layout.fragment_search_page), GalleryAdapt
         viewModel.setQuery(args.query)
         viewModel.setWindow("all")
 
-        topBar_returnBtn.setOnClickListener { returnBtnOnClick() }
-        topBar_svSearchBarInSearch.setOnQueryTextListener(SearchBarQueryListener(topBar_svSearchBarInSearch, this))
-        topBar_svSearchBarInSearch.setQuery(args.query, false)
+        search_btnReturn.setOnClickListener { _returnBtnOnClick() }
+        search_svSearchBar.setOnQueryTextListener(SearchBarQueryListener(search_svSearchBar, this))
+        search_svSearchBar.setQuery(args.query, false)
+
+        for (it in search_rgSortFilters) {
+            if (it !is RadioButton)
+                continue
+            it.setOnCheckedChangeListener { _, isChecked -> _filtersOnCheckedChangeListener(it, isChecked) }
+        }
 
         _setNoResultImage()
         search_rvGallery.adapter = adapter
@@ -65,7 +72,12 @@ class SearchPageFragment : Fragment(R.layout.fragment_search_page), GalleryAdapt
         viewModel.setQuery(query)
     }
 
-    private fun returnBtnOnClick() {
+    private fun _returnBtnOnClick() {
         findNavController().navigateUp()
+    }
+
+    private fun _filtersOnCheckedChangeListener(filterBtn: RadioButton, isChecked: Boolean) {
+        if (filterBtn.isPressed)
+            viewModel.setSort(filterBtn.tag as String)
     }
 }
