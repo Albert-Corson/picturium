@@ -9,12 +9,24 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.picturium.R
 import com.example.picturium.models.Submission
 import kotlinx.android.synthetic.main.profile_page_image_item.view.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class ProfileGalleryAdapter(private var _gallery: List<Submission>, private val _coroutineScope: CoroutineScope) :
+class ProfileGalleryAdapter(private val _listener: ProfileGalleryAdapter.OnItemClickListener, private val _coroutineScope: CoroutineScope) :
     RecyclerView.Adapter<ProfileGalleryAdapter.ViewHolder>() {
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    private var _gallery: List<Submission> = emptyList()
+
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        init {
+            view.setOnClickListener {
+                if (bindingAdapterPosition != RecyclerView.NO_POSITION)
+                    _listener.onItemClick(_gallery[bindingAdapterPosition])
+            }
+        }
+    }
 
     fun setGallery(gallery: List<Submission>) {
         _gallery = gallery
@@ -44,5 +56,9 @@ class ProfileGalleryAdapter(private var _gallery: List<Submission>, private val 
 
     override fun getItemCount(): Int {
         return _gallery.size
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(submission: Submission)
     }
 }
