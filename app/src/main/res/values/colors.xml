@@ -8,4 +8,5 @@
     <color name="translucent">#73FFFFFF</color>
     <color name="primaryLightTransparent">#000f3460</color>
     <color name="primaryDarker">#FF00001C</color>
+    <color name="mediaPlaceholder">#AB434343</color>
 </resources>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dp">
+
+    <ImageView
+        android:id="@+id/mediaItem_ibImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:background="@color/mediaPlaceholder"
+        android:scaleType="fitCenter"
+        android:visibility="invisible"
+        tools:ignore="ContentDescription" />
+
+    <VideoView
+        android:id="@+id/mediaItem_ibVideo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/mediaPlaceholder"
+        android:visibility="invisible"
+        tools:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/mediaItem_ibPlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#5B2E2E2E"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_play_arrow"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/mediaItem_ibVideo"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintEnd_toEndOf="@id/mediaItem_ibVideo"
+        app:layout_constraintStart_toStartOf="@id/mediaItem_ibVideo"
+        app:layout_constraintTop_toTopOf="@id/mediaItem_ibVideo"
+        app:layout_constraintWidth_percent="0.4"
+        tools:ignore="ContentDescription"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
