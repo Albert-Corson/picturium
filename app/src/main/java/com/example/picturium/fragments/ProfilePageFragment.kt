@@ -4,19 +4,21 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.picturium.R
 import com.example.picturium.User
 import com.example.picturium.adapters.ProfileGalleryAdapter
 import com.example.picturium.adapters.ViewPagerAdapter
+import com.example.picturium.models.Submission
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_profile_page.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ProfilePageFragment : Fragment(R.layout.fragment_profile_page) {
+class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGalleryAdapter.OnItemClickListener {
     private lateinit var _favoritesAdapter: ProfileGalleryAdapter
     private lateinit var _submissionsAdapter: ProfileGalleryAdapter
     private lateinit var _viewPagerAdapter: ViewPagerAdapter
@@ -28,27 +30,9 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page) {
         profile_ibLogout.setOnClickListener { _logoutBtnOnClick() }
         profile_ibClose.setOnClickListener { _closeBtnOnClick() }
 
-        _favoritesAdapter = ProfileGalleryAdapter(emptyList(), lifecycleScope)
-        _submissionsAdapter = ProfileGalleryAdapter(emptyList(), lifecycleScope)
+        _favoritesAdapter = ProfileGalleryAdapter(this, lifecycleScope)
+        _submissionsAdapter = ProfileGalleryAdapter(this, lifecycleScope)
         _initTabbedLayoutViewPager()
-    }
-
-    private fun _initTabbedLayoutViewPager() {
-        _viewPagerAdapter = ViewPagerAdapter(
-            listOf(
-                Pair(_favoritesAdapter, GridLayoutManager(context, 3)),
-                Pair(_submissionsAdapter, GridLayoutManager(context, 3))
-            )
-        )
-
-        profile_vpGalleries.adapter = _viewPagerAdapter
-
-        TabLayoutMediator(profile_tbGalleries, profile_vpGalleries) { tab, position ->
-            when (position) {
-                0 -> tab.setIcon(R.drawable.ic_favorite)
-                1 -> tab.setIcon(R.drawable.ic_gallery)
-            }
-        }.attach()
     }
 
     override fun onResume() {
@@ -75,6 +59,30 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page) {
                 }
             }
         }
+    }
+
+    override fun onItemClick(submission: Submission) {
+        val action = ProfilePageFragmentDirections.actionProfilePageFragmentToDetailsPageFragment(submission)
+
+        findNavController().navigate(action)
+    }
+
+    private fun _initTabbedLayoutViewPager() {
+        _viewPagerAdapter = ViewPagerAdapter(
+            listOf(
+                Pair(_favoritesAdapter, GridLayoutManager(context, 3)),
+                Pair(_submissionsAdapter, GridLayoutManager(context, 3))
+            )
+        )
+
+        profile_vpGalleries.adapter = _viewPagerAdapter
+
+        TabLayoutMediator(profile_tbGalleries, profile_vpGalleries) { tab, position ->
+            when (position) {
+                0 -> tab.setIcon(R.drawable.ic_favorite)
+                1 -> tab.setIcon(R.drawable.ic_gallery)
+            }
+        }.attach()
     }
 
     private fun _closeBtnOnClick() {
