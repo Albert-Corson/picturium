@@ -2,9 +2,10 @@ package com.example.picturium.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.picturium.models.Submission
 
 class GalleryFilterViewModel : GalleryViewModel() {
@@ -16,7 +17,7 @@ class GalleryFilterViewModel : GalleryViewModel() {
         val sort = options.second ?: error("no sort value")
         val window = options.third ?: error("no window value")
 
-        mRepo.getGallery(section, sort, window)
+        mRepo.getGallery(section, sort, window).cachedIn(viewModelScope)
     }
 
     fun setSection(section: String) {

@@ -3,13 +3,14 @@ package com.example.picturium.fragments
 import android.os.Bundle
 import android.view.View
 import android.widget.RadioButton
+import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import androidx.paging.map
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.picturium.R
@@ -18,22 +19,22 @@ import com.example.picturium.adapters.GalleryAdapter
 import com.example.picturium.models.Submission
 import com.example.picturium.viewmodels.GallerySearchViewModel
 import kotlinx.android.synthetic.main.fragment_search_page.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class SearchPageFragment : Fragment(R.layout.fragment_search_page), GalleryAdapter.OnItemClickListener,
     SearchBarQueryListener.OnTextSubmitListener {
     private val viewModel by viewModels<GallerySearchViewModel>()
-    private val args: SearchPageFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = GalleryAdapter(this)
+        val adapter = GalleryAdapter(this, viewLifecycleOwner.lifecycleScope)
 
-        viewModel.setQuery(args.query)
         viewModel.setWindow("all")
 
         search_btnReturn.setOnClickListener { _returnBtnOnClick() }
         search_svSearchBar.setOnQueryTextListener(SearchBarQueryListener(search_svSearchBar, this))
-        search_svSearchBar.setQuery(args.query, false)
+        search_svSearchBar.setQuery(arguments?.getString("query"), true)
 
         for (it in search_rgSortFilters) {
             if (it !is RadioButton)
@@ -45,10 +46,15 @@ class SearchPageFragment : Fragment(R.layout.fragment_search_page), GalleryAdapt
         search_rvGallery.adapter = adapter
         search_rvGallery.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { loadStates ->
+                search_rgSortFilters.isVisible = loadStates.refresh !is LoadState.Loading && adapter.itemCount != 0
+                search_progressBar.isVisible = loadStates.refresh is LoadState.Loading
+                search_rvGallery.isVisible = loadStates.refresh !is LoadState.Loading
+                search_ivNoResult.isVisible = loadStates.refresh !is LoadState.Loading && adapter.itemCount == 0
+            }
+        }
         viewModel.submissions.observe(viewLifecycleOwner, {
-            search_progressBar.visibility = View.GONE
-            search_rvGallery.visibility = View.VISIBLE
-            //search_ivNoResult.visibility = if(it.isEmpty()) View.VISIBLE else View.GONE
             adapter.submitData(viewLifecycleOwner.lifecycle, it)
         })
     }
@@ -64,6 +70,13 @@ class SearchPageFragment : Fragment(R.layout.fragment_search_page), GalleryAdapt
         val action = SearchPageFragmentDirections.actionSearchPageFragmentToDetailsPageFragment(submission)
 
         findNavController().navigate(action)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        arguments = bundleOf(
+            "query" to search_svSearchBar.query.toString()
+        )
     }
 
     override fun onTextSubmit(query: String) {

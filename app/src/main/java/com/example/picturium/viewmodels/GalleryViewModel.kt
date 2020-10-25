@@ -1,12 +1,14 @@
 package com.example.picturium.viewmodels
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.picturium.repositories.GalleryRepository
 
-open class GalleryViewModel(): ViewModel() {
-
-    protected val currentSort : MutableLiveData<String> = MutableLiveData("viral")
-    protected val currentWindow : MutableLiveData<String> = MutableLiveData("day")
+open class GalleryViewModel() : ViewModel() {
+    protected val currentSort: MutableLiveData<String> = MutableLiveData("viral")
+    protected val currentWindow: MutableLiveData<String> = MutableLiveData("day")
     protected var mRepo: GalleryRepository = GalleryRepository()
 
 
@@ -22,7 +24,7 @@ open class GalleryViewModel(): ViewModel() {
         first: LiveData<A>,
         second: LiveData<B>,
         third: LiveData<C>
-    ): MediatorLiveData<Triple<A?, B?, C?>>() {
+    ) : MediatorLiveData<Triple<A?, B?, C?>>() {
         init {
             this.addSource(first) { value = Triple(it, second.value, third.value) }
             this.addSource(second) { value = Triple(first.value, it, third.value) }

@@ -18,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class GalleryAdapter(private val listener: OnItemClickListener) :
+class GalleryAdapter(private val listener: OnItemClickListener, private val coroutineScope: CoroutineScope) :
     PagingDataAdapter<Submission, GalleryAdapter.GalleryViewHolder>(PHOTO_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
@@ -33,10 +33,8 @@ class GalleryAdapter(private val listener: OnItemClickListener) :
             val width = currentSubmission.coverWidth
             val height = currentSubmission.coverHeight
 
-            if (width != null && height != null) {
-                val ratio: Float = holder.itemView.width / width.toFloat()
-                holder.itemView.row_img.layoutParams.height = (height.toFloat() * ratio).toInt()
-            }
+            val ratio: Float = holder.itemView.width / width.toFloat()
+            holder.itemView.row_img.layoutParams.height = (height.toFloat() * ratio).toInt()
             holder.bind(currentSubmission)
         }
     }

@@ -2,8 +2,8 @@ package com.example.picturium.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.paging.*
-import com.example.picturium.api.response.GalleryResponse
 import com.example.picturium.api.ImgurAPI
+import com.example.picturium.api.response.GalleryResponse
 import com.example.picturium.models.Submission
 import retrofit2.HttpException
 import java.io.IOException
@@ -11,7 +11,6 @@ import java.io.IOException
 private const val IMGUR_STARTING_PAGE_INDEX = 1
 
 class GalleryRepository {
-
     fun getGallery(section: String, sort: String, window: String): LiveData<PagingData<Submission>> {
 
         return Pager(

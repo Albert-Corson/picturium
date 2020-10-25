@@ -25,7 +25,7 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = GalleryAdapter(this)
+        val adapter = GalleryAdapter(this, viewLifecycleOwner.lifecycleScope)
 
         home_svSearchBar.setOnQueryTextListener(SearchBarQueryListener(home_svSearchBar, this))
         home_ibProfile.setOnClickListener { _profileBtnOnClick() }
