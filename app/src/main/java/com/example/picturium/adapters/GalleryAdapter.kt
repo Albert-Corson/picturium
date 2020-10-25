@@ -77,11 +77,11 @@ class GalleryAdapter(private val listener: OnItemClickListener, private val coro
     companion object {
         private val PHOTO_COMPARATOR = object : DiffUtil.ItemCallback<Submission>() {
             override fun areItemsTheSame(oldItem: Submission, newItem: Submission): Boolean {
-                return oldItem.id == newItem.id
+                return false
             }
 
             override fun areContentsTheSame(oldItem: Submission, newItem: Submission): Boolean {
-                return oldItem == newItem
+                return false
             }
         }
     }

@@ -6,15 +6,23 @@ import android.content.SharedPreferences
 import android.net.Uri
 import com.example.picturium.api.ImgurAPI
 import com.example.picturium.models.UserData
-import com.google.gson.Gson
-import retrofit2.Response
+import kotlinx.coroutines.runBlocking
 
 object User {
     private lateinit var _context: Context
     private lateinit var _cache: SharedPreferences
-    var publicData: UserData? = null
+    private var _publicData: UserData? = null
     var accessToken: String? = null
     var refreshToken: String? = null
+    val publicData: UserData?
+        get() {
+            if (_publicData == null && isLoggedIn()) {
+                runBlocking {
+                    _loadPublicData()
+                }
+            }
+            return _publicData
+        }
 
     suspend fun init(context: Context) {
         _context = context
@@ -33,6 +41,7 @@ object User {
         } else if (tokenCheck is ImgurAPI.CallResult.ErrorResponse && !_refreshAccessToken()) {
             return
         }
+        _save()
         _loadPublicData()
     }
 
@@ -79,8 +88,7 @@ object User {
             is ImgurAPI.CallResult.NetworkError -> Picturium.toastConnectionError()
             is ImgurAPI.CallResult.ErrorResponse -> logout()
             is ImgurAPI.CallResult.SuccessResponse -> {
-                publicData = res.body.data
-                _save()
+                _publicData = res.body.data
                 return true
             }
         }
@@ -104,7 +112,7 @@ object User {
 
     fun logout() {
         _cache.edit().clear().apply()
-        publicData = null
+        _publicData = null
         accessToken = null
         refreshToken = null
     }
@@ -131,6 +139,8 @@ object User {
             is ImgurAPI.CallResult.NetworkError -> Picturium.toastConnectionError()
             is ImgurAPI.CallResult.ErrorResponse -> logout()
             is ImgurAPI.CallResult.SuccessResponse -> {
+                if (publicData == null)
+                    return false
                 publicData!!.submissions = res.body.data
                 return true
             }
@@ -148,6 +158,8 @@ object User {
             is ImgurAPI.CallResult.NetworkError -> Picturium.toastConnectionError()
             is ImgurAPI.CallResult.ErrorResponse -> logout()
             is ImgurAPI.CallResult.SuccessResponse -> {
+                if (publicData == null)
+                    return false
                 publicData!!.favorites = res.body.data
                 return true
             }

@@ -20,7 +20,6 @@ import retrofit2.http.*
 import java.io.IOException
 
 interface ImgurAPI {
-
     private class ImgurInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
             val req = chain.request()
@@ -54,7 +53,7 @@ interface ImgurAPI {
     }
 
     companion object {
-        const val BASE_URL = "https://api.imgur.com/"
+        private const val BASE_URL = "https://api.imgur.com/"
         const val LOGIN_URL = "$BASE_URL/oauth2/authorize?response_type=token&client_id=${BuildConfig.CLIENT_ID}"
 
         private val _httpCltBuilder = OkHttpClient.Builder()
