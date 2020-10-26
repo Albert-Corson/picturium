@@ -33,6 +33,7 @@ object User {
 
         val tokenCheck = ImgurAPI.safeCall {
             ImgurAPI.instance.checkAccessToken()
+            ImgurAPI.CallResult.SuccessResponse(Unit, true, 200)
         }
 
         if (tokenCheck is ImgurAPI.CallResult.NetworkError) {

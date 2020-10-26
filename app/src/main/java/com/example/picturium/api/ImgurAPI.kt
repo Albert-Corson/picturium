@@ -106,7 +106,7 @@ interface ImgurAPI {
     ): CallResult.SuccessResponse<List<Submission>>
 
     @GET("oauth2/secret")
-    suspend fun checkAccessToken(): CallResult.SuccessResponse<Nothing>
+    suspend fun checkAccessToken()
 
     @Headers("Authorization: Client-ID ${BuildConfig.CLIENT_ID}")
     @POST("oauth2/token")
