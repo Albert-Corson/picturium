@@ -53,7 +53,7 @@ object User {
             is ImgurAPI.CallResult.NetworkError -> Picturium.toastConnectionError()
             is ImgurAPI.CallResult.ErrorResponse -> logout()
             is ImgurAPI.CallResult.SuccessResponse -> {
-                accessToken = tokenRefresh.body.data.accessToken
+                accessToken = tokenRefresh.data.accessToken
                 return true
             }
         }
@@ -88,7 +88,7 @@ object User {
             is ImgurAPI.CallResult.NetworkError -> Picturium.toastConnectionError()
             is ImgurAPI.CallResult.ErrorResponse -> logout()
             is ImgurAPI.CallResult.SuccessResponse -> {
-                _publicData = res.body.data
+                _publicData = res.data
                 return true
             }
         }
@@ -141,7 +141,7 @@ object User {
             is ImgurAPI.CallResult.SuccessResponse -> {
                 if (publicData == null)
                     return false
-                publicData!!.submissions = res.body.data
+                publicData!!.submissions = res.data
                 return true
             }
         }
@@ -160,7 +160,7 @@ object User {
             is ImgurAPI.CallResult.SuccessResponse -> {
                 if (publicData == null)
                     return false
-                publicData!!.favorites = res.body.data
+                publicData!!.favorites = res.data
                 return true
             }
         }

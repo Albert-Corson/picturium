@@ -42,4 +42,6 @@ data class Image(
     val hasSound: Boolean?,
     @SerializedName("link")
     val link: String?,
+    @SerializedName("vote")
+    val vote: String?
 ) : Parcelable
