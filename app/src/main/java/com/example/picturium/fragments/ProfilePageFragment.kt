@@ -62,7 +62,7 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGal
     }
 
     override fun onItemClick(submission: Submission) {
-        val action = ProfilePageFragmentDirections.actionProfilePageFragmentToDetailsPageFragment(submission)
+        val action = ProfilePageFragmentDirections.actionProfilePageFragmentToDetailsPageFragment(submission.id ?: "")
 
         findNavController().navigate(action)
     }

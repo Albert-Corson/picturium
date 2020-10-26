@@ -27,113 +27,145 @@
             tools:targetApi="o" />
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/details_tvTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="6dp"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/details_llTopBar"
-        tools:text="Some random title and i'm just testing this stuff, let's see how it handles very long titles, but that doesn't seem long enough" />
-
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/details_clSubmission"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/details_llActionBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/details_tvTitle"
-        tools:ignore="ScrollViewCount">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <ListView
-                android:id="@+id/details_lvAlbum"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:isScrollContainer="false"
-                android:nestedScrollingEnabled="false"
-                tools:ignore="NestedScrolling"
-                tools:listitem="@layout/details_page_media_item" />
-
-            <TextView
-                android:id="@+id/details_tvDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:textColor="#C9FFFFFF"
-                android:textSize="15sp"
-                tools:text="Some very descriptive text" />
-
-        </LinearLayout>
-
-    </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/details_llActionBar"
-        android:layout_width="match_parent"
-        android:layout_height="@android:dimen/app_icon_size"
-        android:orientation="horizontal"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_llTopBar"
+        tools:visibility="visible">
 
-        <ImageButton
-            android:id="@+id/details_ibFavorite"
+        <TextView
+            android:id="@+id/details_tvTitle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@null"
-            android:paddingVertical="10dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_favorite"
-            android:tint="@color/details_page_favorite_button"
-            tools:ignore="ContentDescription" />
-
-        <ToggleButton
-            android:id="@+id/details_tbDownvote"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@null"
-            android:drawableTop="@drawable/ic_thumb_up"
-            android:drawableTint="@color/details_page_thumb_button"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="8dp"
-            android:textColor="@android:color/white"
-            tools:checked="true"
-            tools:textOn="2001" />
+            android:padding="6dp"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Some random title and i'm just testing this stuff, let's see how it handles very long titles, but that doesn't seem long enough" />
 
-        <ToggleButton
-            android:id="@+id/details_tbUpvote"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@null"
-            android:drawableTop="@drawable/ic_thumb_down"
-            android:drawableTint="@color/details_page_thumb_button"
-            android:gravity="center"
-            android:paddingTop="8dp"
-            android:textColor="@android:color/white"
-            tools:textOff="2000" />
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/details_llActionBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/details_tvTitle"
+            tools:ignore="ScrollViewCount">
 
-        <ImageButton
-            android:id="@+id/details_ibShare"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ListView
+                    android:id="@+id/details_lvAlbum"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:isScrollContainer="false"
+                    android:nestedScrollingEnabled="false"
+                    tools:ignore="NestedScrolling"
+                    tools:listitem="@layout/details_page_media_item" />
+
+                <TextView
+                    android:id="@+id/details_tvDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:textColor="#C9FFFFFF"
+                    android:textSize="15sp"
+                    tools:text="Some very descriptive text" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/details_llActionBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@null"
-            android:paddingVertical="10dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_share"
-            tools:ignore="ContentDescription" />
+            android:layout_height="@android:dimen/app_icon_size"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-    </LinearLayout>
+            <CheckBox
+                android:id="@+id/details_cbFavorite"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/ic_favorite"
+                android:drawableTint="@color/details_page_favorite_button"
+                android:paddingTop="10dp" />
+
+            <CheckBox
+                android:id="@+id/details_cbDownvote"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/ic_thumb_up"
+                android:drawableTint="@color/details_page_thumb_button"
+                android:gravity="center"
+                android:paddingTop="8dp"
+                android:textColor="@android:color/white"
+                tools:checked="true"
+                tools:text="2001" />
+
+            <CheckBox
+                android:id="@+id/details_cbUpvote"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/ic_thumb_down"
+                android:drawableTint="@color/details_page_thumb_button"
+                android:gravity="center"
+                android:paddingTop="8dp"
+                android:textColor="@android:color/white"
+                tools:text="2000" />
+
+            <ImageButton
+                android:id="@+id/details_ibShare"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:paddingVertical="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_share"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/details_pbLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_llTopBar" />
+
+    <Button
+        android:id="@+id/details_btnRetry"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        android:text="@string/details_retry_button"
+        android:textSize="15sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_llTopBar"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

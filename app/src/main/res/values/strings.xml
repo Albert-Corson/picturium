@@ -20,4 +20,5 @@
     <string name="details_upvote_button">upVote</string>
     <string name="details_downvote_button">downVote</string>
     <string name="details_favorite_button">favorite</string>
+    <string name="details_retry_button">Tap to retry</string>
 </resources>

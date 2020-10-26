@@ -67,7 +67,7 @@ class SearchPageFragment : Fragment(R.layout.fragment_search_page), GalleryAdapt
     }
 
     override fun onItemClick(submission: Submission) {
-        val action = SearchPageFragmentDirections.actionSearchPageFragmentToDetailsPageFragment(submission)
+        val action = SearchPageFragmentDirections.actionSearchPageFragmentToDetailsPageFragment(submission.id ?: "")
 
         findNavController().navigate(action)
     }
