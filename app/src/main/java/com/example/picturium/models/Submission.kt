@@ -33,6 +33,8 @@ data class Submission(
     val points: Int?,
     @SerializedName("score")
     val score: Int?,
+    @SerializedName("vote")
+    val vote: String?,
 
     @SerializedName("link")
     private val _link: String?,
@@ -82,7 +84,8 @@ data class Submission(
                         height = _height,
                         animated = _animated,
                         hasSound = _hasSound,
-                        link = _link
+                        link = _link,
+                        vote = vote
                     )
                 )
             } else if (_images == null) {
@@ -97,7 +100,7 @@ data class Submission(
                 ImgurAPI.instance.getImage(cover)
             }
             if (res is ImgurAPI.CallResult.SuccessResponse) {
-                res.body.data
+                res.data
             } else {
                 null
             }
