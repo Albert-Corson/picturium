@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.picturium.R
 import com.example.picturium.SearchBarQueryListener
-import com.example.picturium.User
 import com.example.picturium.adapters.GalleryAdapter
 import com.example.picturium.models.Submission
 import com.example.picturium.viewmodels.GalleryFilterViewModel
+import com.example.picturium.viewmodels.UserViewModel
 import kotlinx.android.synthetic.main.fragment_home_page.*
 
 class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.OnItemClickListener,
@@ -37,17 +37,17 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
             it.setOnCheckedChangeListener { _, isChecked -> _filtersOnCheckedChange(it, isChecked) }
         }
 
+        val rvManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        rvManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
         gallery_recyclerView.adapter = adapter
-        gallery_recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        gallery_recyclerView.layoutManager = rvManager
 
         viewModel.submissions.observe(viewLifecycleOwner) {
             adapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        _setProfileBtnImage()
+        UserViewModel.publicData.observe(viewLifecycleOwner) {
+            _setProfileBtnImage(it?.profilePicture)
+        }
     }
 
     override fun onItemClick(submission: Submission) {
@@ -63,9 +63,9 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
         findNavController().navigate(action)
     }
 
-    private fun _setProfileBtnImage() {
+    private fun _setProfileBtnImage(profilePicture: String?) {
         Glide.with(requireContext())
-            .load(User.publicData?.profilePicture)
+            .load(profilePicture)
             .fallback(R.drawable.ic_dflt_profile)
             .circleCrop()
             .into(home_ibProfile)
