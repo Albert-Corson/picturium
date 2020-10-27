@@ -106,7 +106,7 @@
                 android:paddingTop="10dp" />
 
             <CheckBox
-                android:id="@+id/details_cbDownvote"
+                android:id="@+id/details_cbUpvote"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -120,7 +120,7 @@
                 tools:text="2001" />
 
             <CheckBox
-                android:id="@+id/details_cbUpvote"
+                android:id="@+id/details_cbDownvote"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

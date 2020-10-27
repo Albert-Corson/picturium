@@ -126,4 +126,13 @@ interface ImgurAPI {
 
     @GET("3/image/{imageId}")
     suspend fun getImage(@Path("imageId") imageId: String): CallResult.SuccessResponse<Image>
+
+    @POST("3/album/{id}/favorite")
+    suspend fun toggleFavoriteAlbum(@Path("id") id: String): CallResult.SuccessResponse<String?>
+
+    @POST("3/image/{id}/favorite")
+    suspend fun toggleFavoriteImage(@Path("id") id: String): CallResult.SuccessResponse<String?>
+
+    @POST("3/gallery/{id}/vote/{vote}")
+    suspend fun voteOnSubmission(@Path("id") id: String, @Path("vote") vote: String = "veto"): CallResult.SuccessResponse<Any?>
 }
