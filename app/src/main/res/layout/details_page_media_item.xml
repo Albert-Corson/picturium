@@ -3,42 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="5dp">
+    android:layout_height="wrap_content"
+    android:padding="5dp">
 
     <ImageView
-        android:id="@+id/mediaItem_ibImage"
+        android:id="@+id/mediaItem_ivThumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:background="@color/mediaPlaceholder"
         android:scaleType="fitCenter"
-        android:visibility="invisible"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
-    <VideoView
-        android:id="@+id/mediaItem_ibVideo"
+    <FrameLayout
+        android:id="@+id/mediaItem_flVideoContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/mediaPlaceholder"
-        android:visibility="invisible"
-        tools:visibility="visible" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
 
-    <ImageButton
-        android:id="@+id/mediaItem_ibPlay"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#5B2E2E2E"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_play_arrow"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/mediaItem_ibVideo"
-        app:layout_constraintDimensionRatio="h,1:1"
-        app:layout_constraintEnd_toEndOf="@id/mediaItem_ibVideo"
-        app:layout_constraintStart_toStartOf="@id/mediaItem_ibVideo"
-        app:layout_constraintTop_toTopOf="@id/mediaItem_ibVideo"
-        app:layout_constraintWidth_percent="0.4"
-        tools:ignore="ContentDescription"
-        tools:visibility="visible" />
+        <ProgressBar
+            android:id="@+id/mediaItem_pbLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

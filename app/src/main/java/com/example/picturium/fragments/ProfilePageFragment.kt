@@ -86,7 +86,7 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGal
     }
 
     private fun _closeBtnOnClick() {
-        requireActivity().onBackPressed();
+        requireActivity().onBackPressed()
     }
 
     private fun _loginBtnOnClick() {

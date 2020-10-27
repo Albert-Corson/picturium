@@ -38,53 +38,17 @@
         app:layout_constraintTop_toBottomOf="@id/details_llTopBar"
         tools:visibility="visible">
 
-        <TextView
-            android:id="@+id/details_tvTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="6dp"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Some random title and i'm just testing this stuff, let's see how it handles very long titles, but that doesn't seem long enough" />
-
-        <ScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/details_rvAlbum"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/details_llActionBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/details_tvTitle"
-            tools:ignore="ScrollViewCount">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <ListView
-                    android:id="@+id/details_lvAlbum"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:isScrollContainer="false"
-                    android:nestedScrollingEnabled="false"
-                    tools:ignore="NestedScrolling"
-                    tools:listitem="@layout/details_page_media_item" />
-
-                <TextView
-                    android:id="@+id/details_tvDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:textColor="#C9FFFFFF"
-                    android:textSize="15sp"
-                    tools:text="Some very descriptive text" />
-
-            </LinearLayout>
-
-        </ScrollView>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listfooter="@layout/details_page_description"
+            tools:listheader="@layout/details_page_title"
+            tools:listitem="@layout/details_page_media_item" />
 
         <LinearLayout
             android:id="@+id/details_llActionBar"

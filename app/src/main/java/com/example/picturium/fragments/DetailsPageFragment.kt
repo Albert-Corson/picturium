@@ -8,9 +8,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.picturium.Picturium
 import com.example.picturium.R
+import com.example.picturium.adapters.ImageListAdapter
 import com.example.picturium.api.ImgurAPI
+import com.example.picturium.models.DetailsItem
 import com.example.picturium.models.Submission
 import com.example.picturium.viewmodels.DetailsPageViewModel
 import kotlinx.android.synthetic.main.fragment_details_page.*
@@ -49,9 +54,20 @@ class DetailsPageFragment : Fragment(R.layout.fragment_details_page) {
     }
 
     private fun _setDetailsPage() {
+        val itemsList: ArrayList<DetailsItem> = ArrayList()
+
+        if (!_submission.title.isNullOrBlank())
+            itemsList.add(DetailsItem(DetailsItem.Type.HEADER, _submission.title!!))
+        for (image in _submission.images) {
+            itemsList.add(DetailsItem(DetailsItem.Type.ITEM, image))
+        }
+        if (!_submission.description.isNullOrBlank())
+            itemsList.add(DetailsItem(DetailsItem.Type.FOOTER, _submission.description!!))
+
+        details_rvAlbum.adapter = ImageListAdapter(Glide.with(this), itemsList)
+        details_rvAlbum.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+
         details_clSubmission.visibility = View.VISIBLE
-        details_tvTitle.text = _submission.title
-        details_tvDescription.text = _submission.description
         details_cbDownvote.text = (_submission.downVotes ?: 0).toString()
         details_cbUpvote.text = (_submission.upVotes ?: 0).toString()
         details_cbUpvote.isChecked = _submission.vote == "up"
@@ -64,7 +80,7 @@ class DetailsPageFragment : Fragment(R.layout.fragment_details_page) {
     }
 
     private fun _returnBtnOnClick() {
-        requireActivity().onBackPressed();
+        requireActivity().onBackPressed()
     }
 
     private fun _retryBtnOnClick() {

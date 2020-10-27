@@ -92,7 +92,7 @@ data class Submission(
                         score = score,
                         width = _width,
                         height = _height,
-                        animated = _animated,
+                        isAnimated = _animated,
                         hasSound = _hasSound,
                         link = link,
                         vote = vote
