@@ -82,25 +82,38 @@
             android:text="@string/filter_button_section_user" />
     </RadioGroup>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/home_rvGallery"
-        android:layout_width="match_parent"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/home_srlSwipeRefresh"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/primaryDark"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/home_rgFilters"
-        tools:listitem="@layout/item_thread" />
+        app:layout_constraintTop_toBottomOf="@id/home_rgFilters">
 
-    <ProgressBar
-        android:id="@+id/home_pgLoading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/home_rvGallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/primaryDark"
+            tools:listitem="@layout/item_thread" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/home_tvRefresh"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:text="@string/swipe_up_to_refresh"
+        android:textAllCaps="true"
+        android:textColor="@color/translucent"
+        android:textSize="17sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/home_rgFilters" />
+        app:layout_constraintTop_toBottomOf="@+id/home_rgFilters" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

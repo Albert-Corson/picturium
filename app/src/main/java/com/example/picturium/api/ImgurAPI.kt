@@ -91,7 +91,7 @@ interface ImgurAPI {
                         else -> CallResult.ErrorResponse(null, false, -1)
                     }
                 }
-            }
+            } ?: CallResult.NetworkError
         }
     }
 

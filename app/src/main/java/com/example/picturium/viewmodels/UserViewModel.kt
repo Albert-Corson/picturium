@@ -32,21 +32,7 @@ object UserViewModel : ViewModel() {
 
         if (!_loadFromCache())
             return
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val tokenCheck = ImgurAPI.safeCall {
-                ImgurAPI.instance.checkAccessToken()
-                ImgurAPI.CallResult.SuccessResponse(Unit, true, 200)
-            }
-            if (tokenCheck is ImgurAPI.CallResult.NetworkError) {
-                Picturium.toastConnectionError()
-                return@launch
-            } else if (tokenCheck is ImgurAPI.CallResult.ErrorResponse && !_refreshAccessToken()) {
-                return@launch
-            }
-            _save()
-            _loadPublicData()
-        }
+        refresh()
     }
 
     private suspend fun _refreshAccessToken(): Boolean {
@@ -99,6 +85,23 @@ object UserViewModel : ViewModel() {
                 is ImgurAPI.CallResult.ErrorResponse -> logout()
                 is ImgurAPI.CallResult.SuccessResponse -> publicData.postValue(res.data)
             }
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val tokenCheck = ImgurAPI.safeCall {
+                ImgurAPI.instance.checkAccessToken()
+                ImgurAPI.CallResult.SuccessResponse(Unit, true, 200)
+            }
+            if (tokenCheck is ImgurAPI.CallResult.NetworkError) {
+                Picturium.toastConnectionError()
+                return@launch
+            } else if (tokenCheck is ImgurAPI.CallResult.ErrorResponse && !_refreshAccessToken()) {
+                return@launch
+            }
+            _save()
+            _loadPublicData()
         }
     }
 

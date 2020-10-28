@@ -49,7 +49,8 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
         viewLifecycleOwner.lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { loadStates ->
                 home_rvGallery.isVisible = loadStates.refresh !is LoadState.Loading
-                home_pgLoading.isVisible = loadStates.refresh is LoadState.Loading
+                home_srlSwipeRefresh.isRefreshing = loadStates.refresh is LoadState.Loading
+                home_tvRefresh.isVisible = loadStates.refresh !is LoadState.Loading && adapter.itemCount == 0
             }
         }
 
@@ -58,6 +59,12 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
         }
         UserViewModel.publicData.observe(viewLifecycleOwner) {
             _setProfileBtnImage(it?.profilePicture)
+        }
+        home_srlSwipeRefresh.setProgressBackgroundColorSchemeResource(R.color.translucent)
+        home_srlSwipeRefresh.setColorSchemeResources(R.color.primaryAccent)
+        home_srlSwipeRefresh.setOnRefreshListener {
+            adapter.refresh()
+            UserViewModel.refresh()
         }
     }
 
