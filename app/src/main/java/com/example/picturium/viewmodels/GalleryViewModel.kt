@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.picturium.repositories.GalleryRepository
 
-open class GalleryViewModel() : ViewModel() {
+open class GalleryViewModel : ViewModel() {
     protected val currentSort: MutableLiveData<String> = MutableLiveData("viral")
     protected val currentWindow: MutableLiveData<String> = MutableLiveData("day")
     protected var mRepo: GalleryRepository = GalleryRepository()

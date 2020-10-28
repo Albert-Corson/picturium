@@ -37,7 +37,7 @@ data class Submission(
     val vote: String?,
 
     @SerializedName("link")
-    private val _link: String?,
+    val link: String?,
 
     @SerializedName("width")
     private val _width: Int?,
@@ -49,7 +49,7 @@ data class Submission(
     private val _hasSound: Boolean?,
 
     @SerializedName("is_album")
-    private val _isAlbum: Boolean?,
+    private var _isAlbum: Boolean?,
     @SerializedName("cover")
     private val _cover: String?,
     @SerializedName("cover_width")
@@ -62,9 +62,19 @@ data class Submission(
     private val cover: String get() = _cover ?: id!!
     val coverWidth: Int get() = _coverWidth ?: _width!!
     val coverHeight: Int get() = _coverHeight ?: _height!!
+
+    val isAlbum: Boolean
+        get() {
+            if (_isAlbum != null)
+                return _isAlbum!!
+            images
+            return _isAlbum!!
+        }
+
     val images: List<Image>
         get() {
             if (_images == null && _cover == null) {
+                _isAlbum = false
                 _images = listOf(
                     Image(
                         id = id,
@@ -82,13 +92,14 @@ data class Submission(
                         score = score,
                         width = _width,
                         height = _height,
-                        animated = _animated,
+                        isAnimated = _animated,
                         hasSound = _hasSound,
-                        link = _link,
+                        link = link,
                         vote = vote
                     )
                 )
             } else if (_images == null) {
+                _isAlbum = true
                 _images = emptyList()
             }
             return _images!!

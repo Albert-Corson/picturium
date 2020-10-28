@@ -40,9 +40,9 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
         gallery_recyclerView.adapter = adapter
         gallery_recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
-        viewModel.submissions.observe(viewLifecycleOwner, {
+        viewModel.submissions.observe(viewLifecycleOwner) {
             adapter.submitData(viewLifecycleOwner.lifecycle, it)
-        })
+        }
     }
 
     override fun onResume() {
@@ -51,7 +51,7 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
     }
 
     override fun onItemClick(submission: Submission) {
-        val action = HomePageFragmentDirections.actionHomeFragmentToDetailsPageFragment(submission)
+        val action = HomePageFragmentDirections.actionHomeFragmentToDetailsPageFragment(submission.id ?: "")
 
         findNavController().navigate(action)
     }

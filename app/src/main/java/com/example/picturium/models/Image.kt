@@ -37,7 +37,7 @@ data class Image(
     @SerializedName("height")
     val height: Int?,
     @SerializedName("animated")
-    val animated: Boolean?,
+    val isAnimated: Boolean?,
     @SerializedName("has_sound")
     val hasSound: Boolean?,
     @SerializedName("link")

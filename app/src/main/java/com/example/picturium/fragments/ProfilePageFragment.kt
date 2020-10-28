@@ -62,7 +62,7 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGal
     }
 
     override fun onItemClick(submission: Submission) {
-        val action = ProfilePageFragmentDirections.actionProfilePageFragmentToDetailsPageFragment(submission)
+        val action = ProfilePageFragmentDirections.actionProfilePageFragmentToDetailsPageFragment(submission.id ?: "")
 
         findNavController().navigate(action)
     }
@@ -86,7 +86,7 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGal
     }
 
     private fun _closeBtnOnClick() {
-        requireActivity().onBackPressed();
+        requireActivity().onBackPressed()
     }
 
     private fun _loginBtnOnClick() {

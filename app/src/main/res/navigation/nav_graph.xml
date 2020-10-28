@@ -38,8 +38,8 @@
         android:label="fragment_details_page"
         tools:layout="@layout/fragment_details_page">
         <argument
-            android:name="submission"
-            app:argType="com.example.picturium.models.Submission" />
+            android:name="submissionId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/searchPageFragment"

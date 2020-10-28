@@ -1,19 +1,23 @@
 package com.example.picturium.fragments
 
-import android.graphics.drawable.Drawable
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.CompoundButton
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
+import com.example.picturium.Picturium
 import com.example.picturium.R
+import com.example.picturium.adapters.MultiMediaAdapter
+import com.example.picturium.api.ImgurAPI
+import com.example.picturium.models.DetailsItem
+import com.example.picturium.models.Submission
+import com.example.picturium.viewmodels.DetailsPageViewModel
 import kotlinx.android.synthetic.main.fragment_details_page.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,52 +25,167 @@ import kotlinx.coroutines.withContext
 
 class DetailsPageFragment : Fragment(R.layout.fragment_details_page) {
 
-    private val args: DetailsPageFragmentArgs by navArgs()
+    private val _viewModel = DetailsPageViewModel()
+    private lateinit var _submissionId: String
+    private lateinit var _submission: Submission
+    private lateinit var _latestVote: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        search_btnReturn.setOnClickListener { returnBtnOnClick() }
+        _submissionId = navArgs<DetailsPageFragmentArgs>().value.submissionId
 
-        lifecycleScope.launch {
-            val url: String? = args.submission.getCoverImage()?.link
-            withContext(Dispatchers.Main) {
-                Glide.with(this@DetailsPageFragment)
-                    .load(url)
-                    .error(R.drawable.error)
-                    .listener(object : RequestListener<Drawable> {
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            detail_progressBar.isVisible = false
-                            return false
-                        }
+        details_ibReturn.setOnClickListener { _returnBtnOnClick() }
+        details_btnRetry.setOnClickListener { _retryBtnOnClick() }
+        details_ibShare.setOnClickListener { _shareBtnOnClick() }
 
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            detail_progressBar.isVisible = false
-                            text_view_title.isVisible = true
-                            text_view_description.isVisible = true
-                            linear_button_action.isVisible = true
-                            return false
-                        }
-
-                    })
-                    .into(image_view)
-            }
+        _viewModel.isLoading.observe(viewLifecycleOwner) {
+            details_pbLoading.isVisible = it
         }
-        text_view_title.text = args.submission.title
+        _viewModel.isLoadingError.observe(viewLifecycleOwner) {
+            details_btnRetry.visibility = if (it) View.VISIBLE else View.GONE
+        }
+        _viewModel.submission.observe(viewLifecycleOwner) {
+            _submission = it
+            _latestVote = it.vote ?: "veto"
+            _setDetailsPage()
+        }
+        details_btnRetry.callOnClick()
     }
 
-    private fun returnBtnOnClick() {
-        findNavController().navigateUp()
+    override fun onResume() {
+        super.onResume()
+        details_rvAlbum.resumePlayback()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        details_rvAlbum.pausePlayback()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        details_rvAlbum.releasePlayer()
+    }
+
+    private fun _setDetailsPage() {
+        val itemsList: ArrayList<DetailsItem> = ArrayList()
+
+        if (!_submission.title.isNullOrBlank())
+            itemsList.add(DetailsItem(DetailsItem.Type.HEADER, _submission.title!!))
+        for (image in _submission.images) {
+            itemsList.add(DetailsItem(DetailsItem.Type.ITEM, image))
+        }
+        if (!_submission.description.isNullOrBlank())
+            itemsList.add(DetailsItem(DetailsItem.Type.FOOTER, _submission.description!!))
+
+        details_rvAlbum.setImages(itemsList)
+        details_rvAlbum.adapter = MultiMediaAdapter(Glide.with(this), itemsList)
+        details_rvAlbum.layoutManager = object : LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false) {
+            private var check: Boolean = false
+            override fun onLayoutCompleted(state: RecyclerView.State?) {
+                super.onLayoutCompleted(state)
+                if (!check)
+                    details_rvAlbum.startPlayback()
+                check = true
+            }
+        }
+
+        details_clSubmission.visibility = View.VISIBLE
+        details_cbDownvote.text = (_submission.downVotes ?: 0).toString()
+        details_cbUpvote.text = (_submission.upVotes ?: 0).toString()
+        details_cbUpvote.isChecked = _submission.vote == "up"
+        details_cbDownvote.isChecked = _submission.vote == "down"
+        details_cbFavorite.isChecked = _submission.isFavorite ?: false
+
+        details_cbUpvote.setOnCheckedChangeListener { _, isChecked -> _voteBtnOnCheckedChange(details_cbUpvote, isChecked, details_cbDownvote, "up") }
+        details_cbDownvote.setOnCheckedChangeListener { _, isChecked -> _voteBtnOnCheckedChange(details_cbDownvote, isChecked, details_cbUpvote, "down") }
+        details_cbFavorite.setOnCheckedChangeListener { btn, isChecked -> _favoriteBtnOnCheckedChange(btn, isChecked) }
+    }
+
+    private fun _returnBtnOnClick() {
+        requireActivity().onBackPressed()
+    }
+
+    private fun _retryBtnOnClick() {
+        _viewModel.loadSubmission(_submissionId)
+    }
+
+    private fun _favoriteBtnOnCheckedChange(btn: CompoundButton, isChecked: Boolean) {
+        if (!btn.isPressed)
+            return
+        lifecycleScope.launch(Dispatchers.IO) {
+            val res: ImgurAPI.CallResult<String?> = if (_submission.isAlbum) {
+                ImgurAPI.safeCall {
+                    ImgurAPI.instance.toggleFavoriteAlbum(_submissionId)
+                }
+            } else {
+                ImgurAPI.safeCall {
+                    ImgurAPI.instance.toggleFavoriteImage(_submissionId)
+                }
+            }
+            withContext(Dispatchers.Main) {
+                if (res !is ImgurAPI.CallResult.SuccessResponse) {
+                    btn.isChecked = false
+                    if (res is ImgurAPI.CallResult.NetworkError)
+                        Picturium.toastConnectionError()
+                }
+            }
+        }
+    }
+
+    private fun _voteBtnOnCheckedChange(btn: CompoundButton, isChecked: Boolean, otherBtn: CompoundButton, voteType: String) {
+        if (!btn.isPressed)
+            return
+        if (otherBtn.isChecked)
+            _toggleVoteBtn(otherBtn)
+
+        val vote: String
+        if (isChecked) {
+            vote = voteType
+            btn.text = (btn.text.toString().toInt() + 1).toString()
+        } else {
+            vote = "veto"
+            btn.text = (btn.text.toString().toInt() - 1).toString()
+        }
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val res = ImgurAPI.safeCall {
+                ImgurAPI.instance.voteOnSubmission(_submissionId, vote)
+            }
+            if (res is ImgurAPI.CallResult.SuccessResponse) {
+                _latestVote = vote
+            } else {
+                withContext(Dispatchers.Main) {
+                    _toggleVoteBtn(btn)
+                    if (_latestVote != "veto")
+                        _toggleVoteBtn(otherBtn)
+                    if (res is ImgurAPI.CallResult.NetworkError)
+                        Picturium.toastConnectionError()
+                }
+            }
+        }
+    }
+
+    private fun _shareBtnOnClick() {
+        val content = _viewModel.submission.value?.title + System.lineSeparator() + _viewModel.submission.value?.link
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, content)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
+    }
+
+    private fun _toggleVoteBtn(btn: CompoundButton) {
+        val voteCount = btn.text.toString().toInt()
+        if (btn.isChecked) {
+            btn.isChecked = false
+            btn.text = (voteCount - 1).toString()
+        } else {
+            btn.isChecked = true
+            btn.text = (voteCount + 1).toString()
+        }
     }
 }
