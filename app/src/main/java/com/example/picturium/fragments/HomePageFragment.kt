@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.picturium.R
@@ -18,6 +20,8 @@ import com.example.picturium.models.Submission
 import com.example.picturium.viewmodels.GalleryFilterViewModel
 import com.example.picturium.viewmodels.UserViewModel
 import kotlinx.android.synthetic.main.fragment_home_page.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.OnItemClickListener,
     SearchBarQueryListener.OnTextSubmitListener {
@@ -39,8 +43,15 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
 
         val rvManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         rvManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
-        gallery_recyclerView.adapter = adapter
-        gallery_recyclerView.layoutManager = rvManager
+        home_rvGallery.adapter = adapter
+        home_rvGallery.layoutManager = rvManager
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { loadStates ->
+                home_rvGallery.isVisible = loadStates.refresh !is LoadState.Loading
+                home_pgLoading.isVisible = loadStates.refresh is LoadState.Loading
+            }
+        }
 
         viewModel.submissions.observe(viewLifecycleOwner) {
             adapter.submitData(viewLifecycleOwner.lifecycle, it)
