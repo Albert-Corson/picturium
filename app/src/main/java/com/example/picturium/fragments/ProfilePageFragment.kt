@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_profile_page.*
 
 class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGalleryAdapter.OnItemClickListener {
     private lateinit var _favoritesAdapter: ProfileGalleryAdapter
-    private lateinit var _submissionsAdapter: ProfileGalleryAdapter
+    private lateinit var _albumsAdapter: ProfileGalleryAdapter
     private lateinit var _viewPagerAdapter: ViewPagerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,14 +29,14 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGal
         profile_ibClose.setOnClickListener { _closeBtnOnClick() }
 
         _favoritesAdapter = ProfileGalleryAdapter(this, lifecycleScope)
-        _submissionsAdapter = ProfileGalleryAdapter(this, lifecycleScope)
+        _albumsAdapter = ProfileGalleryAdapter(this, lifecycleScope)
         _initTabbedLayoutViewPager()
 
         UserViewModel.favorites.observe(viewLifecycleOwner) {
             _favoritesAdapter.setGallery(it)
         }
-        UserViewModel.submissions.observe(viewLifecycleOwner) {
-            _submissionsAdapter.setGallery(it)
+        UserViewModel.albums.observe(viewLifecycleOwner) {
+            _albumsAdapter.setGallery(it)
         }
         UserViewModel.publicData.observe(viewLifecycleOwner) {
             _loginStatusChanged(it)
@@ -49,7 +49,7 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGal
             return
         UserViewModel.publicData.postValue(UserViewModel.publicData.value)
         UserViewModel.loadFavorites()
-        UserViewModel.loadSubmissions()
+        UserViewModel.loadAlbums()
     }
 
     override fun onItemClick(submission: Submission) {
@@ -62,7 +62,7 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGal
         _viewPagerAdapter = ViewPagerAdapter(
             listOf(
                 Pair(_favoritesAdapter, GridLayoutManager(context, 3)),
-                Pair(_submissionsAdapter, GridLayoutManager(context, 3))
+                Pair(_albumsAdapter, GridLayoutManager(context, 3))
             )
         )
 
@@ -80,12 +80,12 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGal
         _setProfilePicture(userData?.profilePicture)
         if (userData == null) {
             UserViewModel.favorites.value = emptyList()
-            UserViewModel.submissions.value = emptyList()
+            UserViewModel.albums.value = emptyList()
             profile_btnLogin.visibility = View.VISIBLE
             profile_ibLogout.visibility = View.GONE
             profile_tvUsername.visibility = View.GONE
         } else {
-            UserViewModel.loadSubmissions()
+            UserViewModel.loadAlbums()
             UserViewModel.loadFavorites()
             profile_btnLogin.visibility = View.GONE
             profile_ibLogout.visibility = View.VISIBLE
@@ -117,7 +117,7 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGal
         UserViewModel.logout()
         profile_ivProfilePicture.setImageResource(R.drawable.ic_dflt_profile)
         _favoritesAdapter.setGallery(emptyList())
-        _submissionsAdapter.setGallery(emptyList())
+        _albumsAdapter.setGallery(emptyList())
         profile_ibLogout.visibility = View.GONE
         profile_btnLogin.visibility = View.VISIBLE
         profile_tvUsername.text = ""

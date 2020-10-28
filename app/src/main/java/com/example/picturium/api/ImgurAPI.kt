@@ -127,10 +127,13 @@ interface ImgurAPI {
     @GET("3/gallery/{id}")
     suspend fun getSubmission(@Path("id") id: String): CallResult.SuccessResponse<Submission>
 
-    @GET("3/account/{userName}/submissions")
-    suspend fun getSubmissionsFrom(@Path("userName") userName: String = "me"): CallResult.SuccessResponse<List<Submission>>
+    @GET("3/account/{userName}/album/{id}")
+    suspend fun getAlbumFrom(@Path("userName") userName: String = "me", @Path("id") id: String): CallResult.SuccessResponse<Submission>
 
-    @GET("3/account/{userName}/favorites")
+    @GET("3/account/{userName}/albums")
+    suspend fun getAlbumsFrom(@Path("userName") userName: String = "me"): CallResult.SuccessResponse<List<Submission>>
+
+    @GET("3/account/{userName}/gallery_favorites")
     suspend fun getFavoritesFrom(@Path("userName") userName: String = "me"): CallResult.SuccessResponse<List<Submission>>
 
     @GET("3/image/{imageId}")
@@ -154,7 +157,7 @@ interface ImgurAPI {
         @Part("ids[]") ids: List<RequestBody>,
         @Part("cover") cover: RequestBody,
         @Part("privacy") privacy: RequestBody,
-        ): CallResult.SuccessResponse<Submission>
+    ): CallResult.SuccessResponse<Submission>
 
     @Multipart
     @POST("3/image")

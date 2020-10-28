@@ -20,7 +20,7 @@ object UserViewModel : ViewModel() {
     private lateinit var _cache: SharedPreferences
     val publicData: MutableLiveData<UserData?> = MutableLiveData()
     val favorites: MutableLiveData<List<Submission>> = MutableLiveData()
-    val submissions: MutableLiveData<List<Submission>> = MutableLiveData()
+    val albums: MutableLiveData<List<Submission>> = MutableLiveData()
     var refreshToken: String? = null
         private set
     var accessToken: String? = null
@@ -139,12 +139,12 @@ object UserViewModel : ViewModel() {
         return accessToken != null
     }
 
-    fun loadSubmissions() {
+    fun loadAlbums() {
         viewModelScope.launch(Dispatchers.IO) {
             val res = ImgurAPI.safeCall {
-                ImgurAPI.instance.getSubmissionsFrom()
+                ImgurAPI.instance.getAlbumsFrom()
             }
-            submissions.postValue(
+            albums.postValue(
                 when (res) {
                     is ImgurAPI.CallResult.NetworkError -> {
                         Picturium.toastConnectionError()

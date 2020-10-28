@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ProfileGalleryAdapter(private val _listener: ProfileGalleryAdapter.OnItemClickListener, private val _coroutineScope: CoroutineScope) :
+class ProfileGalleryAdapter(private val _listener: OnItemClickListener, private val _coroutineScope: CoroutineScope) :
     RecyclerView.Adapter<ProfileGalleryAdapter.ViewHolder>() {
 
     private var _gallery: List<Submission> = emptyList()

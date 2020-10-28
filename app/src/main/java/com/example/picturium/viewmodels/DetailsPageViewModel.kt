@@ -27,11 +27,28 @@ class DetailsPageViewModel : ViewModel() {
                         submission.value = res.data
                         isLoadingError.value = false
                     }
+                    else -> _loadAlbum(id)
+                }
+                isLoading.value = false
+            }
+        }
+    }
+
+    private suspend fun _loadAlbum(id: String) {
+        withContext(Dispatchers.IO) {
+            val res = ImgurAPI.safeCall {
+                ImgurAPI.instance.getAlbumFrom(id = id)
+            }
+            withContext(Dispatchers.Main) {
+                when (res) {
+                    is ImgurAPI.CallResult.SuccessResponse -> {
+                        submission.value = res.data
+                        isLoadingError.value = false
+                    }
                     else -> {
                         isLoadingError.value = true
                     }
                 }
-                isLoading.value = false
             }
         }
     }
