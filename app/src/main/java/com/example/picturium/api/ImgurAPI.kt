@@ -153,7 +153,8 @@ interface ImgurAPI {
         @Part("description") description: RequestBody,
         @Part("ids[]") ids: List<RequestBody>,
         @Part("cover") cover: RequestBody,
-    ): CallResult.SuccessResponse<Submission>
+        @Part("privacy") privacy: RequestBody,
+        ): CallResult.SuccessResponse<Submission>
 
     @Multipart
     @POST("3/image")

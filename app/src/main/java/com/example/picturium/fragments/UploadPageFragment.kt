@@ -4,6 +4,10 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.Toast
+import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,8 +33,23 @@ class UploadPageFragment : Fragment(R.layout.fragment_upload_page) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        upload_returnBtn.setOnClickListener {
+            requireActivity().onBackPressed()
+            upload_etDescription.clearFocus()
+            upload_etTitle.clearFocus()
+        }
         upload_imageButton.setOnClickListener { choosePicture() }
-        upload_ibDone.setOnClickListener { GlobalScope.launch(Dispatchers.Main) { uploadAlbum() } }
+        upload_ibDone.setOnClickListener {
+            val title = upload_etTitle.text.toString()
+            val description = upload_etDescription.text.toString()
+            val radioGroup = upload_privacyBtnGroup
+            GlobalScope.launch(Dispatchers.Main) {
+                uploadAlbum(title, description, radioGroup)
+            }
+            requireActivity().onBackPressed()
+            upload_etTitle.clearFocus()
+            upload_etDescription.clearFocus()
+        }
 
         val list: RecyclerView = upload_rvImage
         adapter = UploadAdapter()
@@ -57,19 +76,25 @@ class UploadPageFragment : Fragment(R.layout.fragment_upload_page) {
     }
 
     @Throws(IOException::class)
-    private suspend fun uploadAlbum() {
+    private suspend fun uploadAlbum(title: String, description: String, radioGroup: RadioGroup) {
         val imagesId = mutableListOf<String>()
         val list = adapter.getUris()
         var inputStream: InputStream?
         var binary: ByteArray?
         var requestImage: MultipartBody.Part
         val context = this.requireContext()
-        val titleAlbum: RequestBody = upload_etTitle.text.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        val descriptionAlbum: RequestBody = upload_etDescription.text.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val descriptionAlbum: RequestBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
         val idsAlbum: MutableList<RequestBody> = mutableListOf()
         val coverAlbum: RequestBody
+        var privacyString: String? = null
+        var privacyAlbum: RequestBody? = null
 
-        list.forEach { uri ->
+        if (list.isEmpty() || title.isEmpty()) {
+            Toast.makeText(context, "Incorrect upload", Toast.LENGTH_SHORT).show()
+            return
+        }
+        list.forEachIndexed {index, uri ->
+            Toast.makeText(context, "Upload image(s) : " + (index + 1) + "/" + list.size, Toast.LENGTH_SHORT).show()
             inputStream = context.contentResolver.openInputStream(uri)
             binary = inputStream?.readBytes()
             binary?.toRequestBody("multipart/form-data".toMediaTypeOrNull(), 0, binary!!.size)?.let { bin ->
@@ -82,15 +107,27 @@ class UploadPageFragment : Fragment(R.layout.fragment_upload_page) {
                 }
             }
         }
-        if (imagesId.isEmpty())
-            return
+        val titleAlbum: RequestBody = title.toRequestBody("text/plain".toMediaTypeOrNull())
+        for (it in radioGroup) {
+            if (it !is RadioButton || !it.isChecked)
+                continue
+            privacyString = it.text.toString()
+            break
+        }
+        privacyString?.let {
+            privacyAlbum = it.toRequestBody("text/plain".toMediaTypeOrNull())
+        }
         imagesId.forEach { value ->
             idsAlbum.add(value.toRequestBody("text/plain".toMediaTypeOrNull()))
         }
         coverAlbum = imagesId.first().toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val tmp = ImgurAPI.safeCall {
-            ImgurAPI.instance.newAlbum(titleAlbum, descriptionAlbum, idsAlbum, coverAlbum)
+        val albumInfo = ImgurAPI.safeCall {
+            ImgurAPI.instance.newAlbum(titleAlbum, descriptionAlbum, idsAlbum, coverAlbum, privacyAlbum!!)
         }
+        if (albumInfo is ImgurAPI.CallResult.SuccessResponse) {
+            Toast.makeText(context, "Album uploaded", Toast.LENGTH_SHORT).show()
+        }
+
     }
 }

@@ -18,14 +18,12 @@
             app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-                android:id="@+id/topBar_returnBtn"
+                android:id="@+id/upload_returnBtn"
                 android:layout_width="@android:dimen/app_icon_size"
                 android:layout_height="@android:dimen/app_icon_size"
                 android:background="@android:color/transparent"
-                android:contentDescription="@string/profile_btn_description"
                 android:src="@drawable/ic_arrow_back"
                 android:theme="@style/AppTheme.TopBar.ImageButton"
-                android:tooltipText="@string/profile_btn_description"
                 tools:targetApi="o"/>
 
         <TextView
@@ -66,13 +64,40 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
             <EditText
                     android:id="@+id/upload_etTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="title"
+                    android:hint="Title"
+                    android:paddingVertical="15dp"
+                    android:background="@android:color/transparent"
                     android:gravity="center">
             </EditText>
+            <RadioGroup
+                    android:id="@+id/upload_privacyBtnGroup"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:checkedButton="@id/upload_publicBtn">
+                <RadioButton
+                        android:id="@+id/upload_publicBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        style="@style/AppTheme.FilterBar.MainFilterButton"
+                        android:background="@android:color/white"
+                        android:text="public"/>
+                <RadioButton
+                        android:id="@+id/upload_hiddenBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        style="@style/AppTheme.FilterBar.MainFilterButton"
+                        android:background="@android:color/white"
+                        android:text="hidden"/>
+            </RadioGroup>
+
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/upload_rvImage"
@@ -83,15 +108,20 @@
             <ImageButton
                     android:src="@drawable/ic_upload_button"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/upload_imageButton"/>
+                    android:layout_height="60dp"
+                    android:scaleType="fitCenter"
+                    android:id="@+id/upload_imageButton"
+                    android:background="@null"/>
 
             <EditText
                     android:id="@+id/upload_etDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minLines="7"
-                    android:hint="description"
+                    android:minLines="5"
+                    android:hint="Description"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@android:color/transparent"
                     android:gravity="top"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
