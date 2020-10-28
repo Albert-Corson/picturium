@@ -11,7 +11,6 @@ open class GalleryViewModel : ViewModel() {
     protected val currentWindow: MutableLiveData<String> = MutableLiveData("day")
     protected var mRepo: GalleryRepository = GalleryRepository()
 
-
     fun setSort(sort: String) {
         currentSort.value = sort
     }
