@@ -12,12 +12,15 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 interface ImgurAPI {
     private class ImgurInterceptor : Interceptor {
@@ -63,6 +66,9 @@ interface ImgurAPI {
         const val LOGIN_URL = "$BASE_URL/oauth2/authorize?response_type=token&client_id=${BuildConfig.CLIENT_ID}"
 
         private val _httpCltBuilder = OkHttpClient.Builder()
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
             .addInterceptor(ImgurInterceptor())
         val instance: ImgurAPI = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -71,7 +77,10 @@ interface ImgurAPI {
             .build()
             .create(ImgurAPI::class.java)
 
-        suspend fun <T> safeCall(dispatcher: CoroutineDispatcher = Dispatchers.IO, apiCall: suspend () -> CallResult<T>): CallResult<T> {
+        suspend fun <T> safeCall(
+            dispatcher: CoroutineDispatcher = Dispatchers.IO,
+            apiCall: suspend () -> CallResult<T>
+        ): CallResult<T> {
             return withContext(dispatcher) {
                 try {
                     apiCall()
@@ -135,4 +144,19 @@ interface ImgurAPI {
 
     @POST("3/gallery/{id}/vote/{vote}")
     suspend fun voteOnSubmission(@Path("id") id: String, @Path("vote") vote: String = "veto"): CallResult.SuccessResponse<Any?>
+
+    @Multipart
+    @JvmSuppressWildcards
+    @POST("3/album")
+    suspend fun newAlbum(
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part("ids[]") ids: List<RequestBody>,
+        @Part("cover") cover: RequestBody,
+        @Part("privacy") privacy: RequestBody,
+        ): CallResult.SuccessResponse<Submission>
+
+    @Multipart
+    @POST("3/image")
+    suspend fun newImage(@Part images: MultipartBody.Part): CallResult.SuccessResponse<Image>
 }

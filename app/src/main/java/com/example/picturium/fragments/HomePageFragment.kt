@@ -89,7 +89,9 @@ class HomePageFragment : Fragment(R.layout.fragment_home_page), GalleryAdapter.O
     }
 
     private fun _uploadBtnOnClick() {
-        Toast.makeText(context, "Upload", Toast.LENGTH_LONG).show()
+        val action = HomePageFragmentDirections.actionHomeFragmentToUploadPageFragment()
+
+        findNavController().navigate(action)
     }
 
     private fun _filtersOnCheckedChange(filterBtn: RadioButton, isChecked: Boolean) {

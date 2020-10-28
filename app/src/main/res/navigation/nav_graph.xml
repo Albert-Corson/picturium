@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_homeFragment_to_searchPageFragment"
             app:destination="@id/searchPageFragment" />
+        <action
+                android:id="@+id/action_homeFragment_to_uploadPageFragment"
+                app:destination="@id/uploadPageFragment"/>
     </fragment>
     <fragment
         android:id="@+id/profilePageFragment"
@@ -53,4 +56,8 @@
             android:id="@+id/action_searchPageFragment_to_detailsPageFragment"
             app:destination="@id/detailsPageFragment" />
     </fragment>
+    <fragment
+            android:id="@+id/uploadPageFragment"
+            android:name="com.example.picturium.fragments.UploadPageFragment"
+            android:label="UploadPageFragment"/>
 </navigation>
