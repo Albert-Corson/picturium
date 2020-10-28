@@ -78,7 +78,7 @@ class UploadPageFragment : Fragment(R.layout.fragment_upload_page) {
                     ImgurAPI.instance.newImage(requestImage)
                 }
                 if (imageInfo is ImgurAPI.CallResult.SuccessResponse) {
-                    imageInfo.body.data.id?.let { imagesId.add(it) }
+                    imageInfo.data.id?.let { imagesId.add(it) }
                 }
             }
         }

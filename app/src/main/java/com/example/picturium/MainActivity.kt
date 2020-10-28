@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
         if (UserViewModel.handleLoginCallback(intent.data)) {
             val action = HomePageFragmentDirections.actionHomeFragmentToProfilePageFragment()
             findNavController(this, R.id.fcvHomePage).navigate(action)
+            intent.data = null
         }
     }
 }
