@@ -9,6 +9,7 @@
         android:name=".Picturium"
         android:allowBackup="false"
         android:fullBackupContent="false"
+        android:icon="@drawable/ic_app_logo"
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
