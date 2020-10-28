@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.picturium.Picturium
 import com.example.picturium.R
-import com.example.picturium.adapters.ImageListAdapter
+import com.example.picturium.adapters.MultiMediaAdapter
 import com.example.picturium.api.ImgurAPI
 import com.example.picturium.models.DetailsItem
 import com.example.picturium.models.Submission
@@ -53,6 +53,21 @@ class DetailsPageFragment : Fragment(R.layout.fragment_details_page) {
         details_btnRetry.callOnClick()
     }
 
+    override fun onResume() {
+        super.onResume()
+        details_rvAlbum.resumePlayback()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        details_rvAlbum.pausePlayback()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        details_rvAlbum.releasePlayer()
+    }
+
     private fun _setDetailsPage() {
         val itemsList: ArrayList<DetailsItem> = ArrayList()
 
@@ -64,8 +79,17 @@ class DetailsPageFragment : Fragment(R.layout.fragment_details_page) {
         if (!_submission.description.isNullOrBlank())
             itemsList.add(DetailsItem(DetailsItem.Type.FOOTER, _submission.description!!))
 
-        details_rvAlbum.adapter = ImageListAdapter(Glide.with(this), itemsList)
-        details_rvAlbum.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        details_rvAlbum.setImages(itemsList)
+        details_rvAlbum.adapter = MultiMediaAdapter(Glide.with(this), itemsList)
+        details_rvAlbum.layoutManager = object : LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false) {
+            private var check: Boolean = false
+            override fun onLayoutCompleted(state: RecyclerView.State?) {
+                super.onLayoutCompleted(state)
+                if (!check)
+                    details_rvAlbum.startPlayback()
+                check = true
+            }
+        }
 
         details_clSubmission.visibility = View.VISIBLE
         details_cbDownvote.text = (_submission.downVotes ?: 0).toString()

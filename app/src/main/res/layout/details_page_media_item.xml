@@ -10,36 +10,44 @@
         android:id="@+id/mediaItem_ivThumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:background="@color/mediaPlaceholder"
         android:scaleType="fitCenter"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
         tools:ignore="ContentDescription" />
 
     <FrameLayout
         android:id="@+id/mediaItem_flVideoContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible">
 
+        <ImageView
+            android:id="@+id/mediaItem_ivVolumeControl"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:alpha="0"
+            android:animateLayoutChanges="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_volume_on"
+            tools:alpha="1"
+            tools:ignore="ContentDescription" />
+
         <ProgressBar
             android:id="@+id/mediaItem_pbLoading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone"
+            android:visibility="invisible"
             tools:visibility="visible" />
-
     </FrameLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
