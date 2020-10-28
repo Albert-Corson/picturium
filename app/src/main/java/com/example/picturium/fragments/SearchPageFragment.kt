@@ -48,15 +48,21 @@ class SearchPageFragment : Fragment(R.layout.fragment_search_page), GalleryAdapt
 
         viewLifecycleOwner.lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { loadStates ->
+                search_srlSwipeRefresh.isRefreshing = loadStates.refresh is LoadState.Loading
                 search_rgSortFilters.isVisible = adapter.itemCount != 0
-                search_pgLoading.isVisible = loadStates.refresh is LoadState.Loading
                 search_rvGallery.isVisible = loadStates.refresh !is LoadState.Loading
                 search_ivNoResult.isVisible = loadStates.refresh !is LoadState.Loading && adapter.itemCount == 0
+                search_tvRefresh.isVisible = loadStates.refresh !is LoadState.Loading && adapter.itemCount == 0
             }
         }
         viewModel.submissions.observe(viewLifecycleOwner, {
             adapter.submitData(viewLifecycleOwner.lifecycle, it)
         })
+        search_srlSwipeRefresh.setProgressBackgroundColorSchemeResource(R.color.translucent)
+        search_srlSwipeRefresh.setColorSchemeResources(R.color.primaryAccent)
+        search_srlSwipeRefresh.setOnRefreshListener {
+            adapter.refresh()
+        }
     }
 
     private fun _setNoResultImage() {
@@ -80,7 +86,7 @@ class SearchPageFragment : Fragment(R.layout.fragment_search_page), GalleryAdapt
     }
 
     override fun onTextSubmit(query: String) {
-        search_pgLoading.visibility = View.VISIBLE
+        search_srlSwipeRefresh.isRefreshing = true
         search_rvGallery.visibility = View.GONE
         viewModel.setQuery(query)
     }
