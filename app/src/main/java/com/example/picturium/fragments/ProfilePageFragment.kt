@@ -8,15 +8,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.picturium.R
-import com.example.picturium.User
 import com.example.picturium.adapters.ProfileGalleryAdapter
 import com.example.picturium.adapters.ViewPagerAdapter
 import com.example.picturium.models.Submission
+import com.example.picturium.models.UserData
+import com.example.picturium.viewmodels.UserViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_profile_page.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGalleryAdapter.OnItemClickListener {
     private lateinit var _favoritesAdapter: ProfileGalleryAdapter
@@ -33,32 +31,25 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGal
         _favoritesAdapter = ProfileGalleryAdapter(this, lifecycleScope)
         _submissionsAdapter = ProfileGalleryAdapter(this, lifecycleScope)
         _initTabbedLayoutViewPager()
+
+        UserViewModel.favorites.observe(viewLifecycleOwner) {
+            _favoritesAdapter.setGallery(it)
+        }
+        UserViewModel.submissions.observe(viewLifecycleOwner) {
+            _submissionsAdapter.setGallery(it)
+        }
+        UserViewModel.publicData.observe(viewLifecycleOwner) {
+            _loginStatusChanged(it)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        lifecycleScope.launch(Dispatchers.IO) {
-            User.handleLoginCallback(requireActivity().intent.data)
-            if (User.isLoggedIn()) {
-                _refreshFavorites()
-                _refreshSubmissions()
-                withContext(Dispatchers.Main) {
-                    Glide.with(requireContext())
-                        .load(User.publicData?.profilePicture)
-                        .fallback(R.drawable.ic_dflt_profile)
-                        .circleCrop()
-                        .into(profile_ivProfilePicture)
-                    profile_ibLogout.visibility = View.VISIBLE
-                    profile_btnLogin.visibility = View.GONE
-                    profile_tvUsername.text = User.publicData?.username
-                }
-            } else {
-                withContext(Dispatchers.Main) {
-                    profile_ibLogout.visibility = View.GONE
-                    profile_btnLogin.visibility = View.VISIBLE
-                }
-            }
-        }
+        if (!UserViewModel.isLoggedIn())
+            return
+        UserViewModel.publicData.postValue(UserViewModel.publicData.value)
+        UserViewModel.loadFavorites()
+        UserViewModel.loadSubmissions()
     }
 
     override fun onItemClick(submission: Submission) {
@@ -85,42 +76,50 @@ class ProfilePageFragment : Fragment(R.layout.fragment_profile_page), ProfileGal
         }.attach()
     }
 
+    private fun _loginStatusChanged(userData: UserData?) {
+        _setProfilePicture(userData?.profilePicture)
+        if (userData == null) {
+            UserViewModel.favorites.value = emptyList()
+            UserViewModel.submissions.value = emptyList()
+            profile_btnLogin.visibility = View.VISIBLE
+            profile_ibLogout.visibility = View.GONE
+            profile_tvUsername.visibility = View.GONE
+        } else {
+            UserViewModel.loadSubmissions()
+            UserViewModel.loadFavorites()
+            profile_btnLogin.visibility = View.GONE
+            profile_ibLogout.visibility = View.VISIBLE
+            profile_tvUsername.visibility = View.VISIBLE
+            profile_tvUsername.text = userData.username
+        }
+    }
+
+    private fun _setProfilePicture(profilePicture: String?) {
+        Glide.with(requireContext())
+            .load(profilePicture)
+            .fallback(R.drawable.ic_dflt_profile)
+            .circleCrop()
+            .into(profile_ivProfilePicture)
+    }
+
     private fun _closeBtnOnClick() {
         requireActivity().onBackPressed()
     }
 
     private fun _loginBtnOnClick() {
-        if (!User.isLoggedIn())
-            User.redirectToLogin(requireContext())
+        if (!UserViewModel.isLoggedIn())
+            UserViewModel.redirectToLogin(requireContext())
     }
 
     private fun _logoutBtnOnClick() {
-        if (!User.isLoggedIn())
+        if (!UserViewModel.isLoggedIn())
             return
-        User.logout()
+        UserViewModel.logout()
         profile_ivProfilePicture.setImageResource(R.drawable.ic_dflt_profile)
         _favoritesAdapter.setGallery(emptyList())
         _submissionsAdapter.setGallery(emptyList())
         profile_ibLogout.visibility = View.GONE
         profile_btnLogin.visibility = View.VISIBLE
         profile_tvUsername.text = ""
-    }
-
-    private fun _refreshFavorites() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            User.loadFavorites()
-            withContext(Dispatchers.Main) {
-                _favoritesAdapter.setGallery(User.publicData?.favorites ?: emptyList())
-            }
-        }
-    }
-
-    private fun _refreshSubmissions() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            User.loadSubmissions()
-            withContext(Dispatchers.Main) {
-                _submissionsAdapter.setGallery(User.publicData?.submissions ?: emptyList())
-            }
-        }
     }
 }

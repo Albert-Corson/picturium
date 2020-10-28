@@ -2,7 +2,7 @@ package com.example.picturium
 
 import android.app.Application
 import android.widget.Toast
-import kotlinx.coroutines.runBlocking
+import com.example.picturium.viewmodels.UserViewModel
 
 class Picturium : Application() {
     companion object {
@@ -16,8 +16,6 @@ class Picturium : Application() {
     override fun onCreate() {
         super.onCreate()
         _toast = Toast.makeText(applicationContext, "Can't connect to Imgur", Toast.LENGTH_SHORT)
-        runBlocking {
-            User.init(applicationContext)
-        }
+        UserViewModel.init(applicationContext)
     }
 }
