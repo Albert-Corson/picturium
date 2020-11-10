@@ -1,6 +1,6 @@
 # Picturium
 
-*This project was a school project done in 2020 (the Epicture at Epitech)*
+*This project was a school project done in 2020 (the Epicture at Epitech). This repository is a copy of the original*
 ___
 
 ## Authors
